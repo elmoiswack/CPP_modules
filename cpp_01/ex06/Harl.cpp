@@ -5,7 +5,12 @@ void	Harl::complain(std::string level)
 	std::string levels[4] = {"debug", "info", "warning", "error"};
 	func	funcs[4] = {&Harl::debug, &Harl::info, &Harl::warning, &Harl::error};
 	int index = 0;
-
+	while (level[index])
+	{
+		level[index] = tolower(level[index]);
+		index++;
+	}
+	index = 0;
 	while (index < 4)
 	{
 		if (levels[index].compare(level) == 0)
@@ -14,10 +19,26 @@ void	Harl::complain(std::string level)
 	}
 	if (index == 4)
 	{
-		std::cout << "I can't believe that Burger King is closed!" << std::endl;
+		std::cout << "[ Probably complaining about insignificant problems ]" << std::endl;
 		return ;
-	}
-	(this->*funcs[index])();
+	}	
+    switch (index) { 
+    case 0: 
+		std::cout << "[DEBUG]" << std::endl;
+		(this->*funcs[index])();
+		index += 1;
+    case 1: 
+		std::cout << "[INFO]" << std::endl;
+		(this->*funcs[index])();
+		index += 1;
+    case 2: 
+		std::cout << "[WARNING]" << std::endl;
+		(this->*funcs[index])();
+		index += 1;
+    case 3:
+		std::cout << "[ERROR]" << std::endl;
+		(this->*funcs[index])();
+    }
 	return ;
 }
 

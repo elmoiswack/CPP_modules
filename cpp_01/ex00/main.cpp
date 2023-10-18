@@ -15,7 +15,7 @@ int	main(void)
 	mark->announce();
 	kevin->announce();
 
-	std::cout << "" << std::endl;
+	std::cout << std::endl;
 	delete jack;
 	delete mark;
 	delete kevin;

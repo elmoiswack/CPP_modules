@@ -9,6 +9,15 @@ ScavTrap::ScavTrap(std::string name)
 	this->attack_damage = 20;
 }
 
+ScavTrap::ScavTrap()
+{
+	std::cout << "ScavTrap default constructor without name is called!" << std::endl;
+	this->name = "Empty";
+	this->hit_points = 100;
+	this->energy_points = 50;
+	this->attack_damage = 20;	
+}
+
 ScavTrap::~ScavTrap(void)
 {
 	std::cout << "ScavTrap deconstructor is called!" << std::endl;

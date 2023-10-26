@@ -1,4 +1,4 @@
-NAME	:=	Brains
+NAME	:=	Ninstantiable
 
 SRC	:=	main.cpp \
 		Animal.cpp \

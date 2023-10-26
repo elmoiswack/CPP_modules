@@ -7,8 +7,7 @@
 
 int	main(void)
 {
-
-	const Animal* meta = new Animal();
+	//const Animal* meta = new Animal();
 	const Animal* j = new Dog();
 	const Animal* i = new Cat();
 
@@ -19,12 +18,12 @@ int	main(void)
 	std::cout << std::endl;
 	i->makeSound();
 	j->makeSound();
-	meta->makeSound();
+	//meta->makeSound();
 
 	std::cout << std::endl;
 	delete j;
 	delete i;
-	delete meta;
+	//delete meta;
 
 	std::cout << std::endl;
 	const WrongAnimal* wanim = new WrongAnimal();

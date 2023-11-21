@@ -52,7 +52,7 @@ void PhoneBook::show_details_list(PhoneBook list)
 	contact = list.phone_list[index];
 	if (contact.get_id(contact) != (index + 1))
 	{
-		std::cout << "Invalid input! The information doesn't exist yet!" << std::endl;
+		std::cout << "It appears that this information doens't exist yet, how strange!" << std::endl;
 		return ;		
 	}	
 	std::cout << "First name = ";

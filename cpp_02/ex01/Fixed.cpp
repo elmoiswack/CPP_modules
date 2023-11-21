@@ -17,13 +17,13 @@ Fixed::Fixed(const Fixed &a)
 Fixed::Fixed(const int fixed_int)
 {
 	std::cout << "Integer constructor is called" << std::endl;
-	this->fixed_point = fixed_int;
+	this->fixed_point = fixed_int << this->frac_bits;
 }
 
 Fixed::Fixed(const float fixed_float)
 {
 	std::cout << "Float constructor is called" << std::endl;
-	this->fixed_point = fixed_float;
+	this->fixed_point = roundf(fixed_float * (1 << this->frac_bits));;
 }
 
 Fixed& Fixed::operator=(const Fixed& a)
@@ -60,7 +60,7 @@ float Fixed::toFloat( void ) const
 {
 	float a;
 
-	a = this->fixed_point << this->frac_bits;
+	a = (float)this->fixed_point / (1 << this->frac_bits);
 	return (a);
 }
 
@@ -68,6 +68,6 @@ int Fixed::toInt( void ) const
 {
 	int	a;
 
-	a = roundf(this->fixed_point << this->frac_bits);
+	a = this->fixed_point >> this->frac_bits;
 	return (a);
 }

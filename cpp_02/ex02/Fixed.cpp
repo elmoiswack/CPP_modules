@@ -120,29 +120,29 @@ bool Fixed::operator!=(Fixed& refference)
 		return (false);
 }
 
-Fixed	Fixed::operator+(Fixed& reference)
+Fixed	Fixed::operator+(const Fixed& reference)
 {
-	this->fixed_point += reference.fixed_point;
-	return (*this);
+	Fixed temp = this->toFloat() + reference.toFloat();
+	return (temp);
 
 }
 
-Fixed	Fixed::operator-(Fixed& reference)
+Fixed	Fixed::operator-(const Fixed& reference)
 {
-	this->fixed_point -= reference.fixed_point;
-	return (*this);
+	Fixed temp = this->toFloat() - reference.toFloat();
+	return (temp);
 }
 
-Fixed	Fixed::operator*(Fixed& reference)
+Fixed	Fixed::operator*(const Fixed& reference)
 {
-	this->fixed_point = this->fixed_point * reference.fixed_point;
-	return (*this);
+	Fixed temp = this->toFloat() * reference.toFloat();
+	return (temp);
 }
 
-Fixed	Fixed::operator/(Fixed& reference)
+Fixed	Fixed::operator/(const Fixed& reference)
 {
-	this->fixed_point = this->fixed_point / reference.fixed_point;
-	return (*this);
+	Fixed temp = this->toFloat() / reference.toFloat();
+	return (temp);
 }
 
 Fixed& Fixed::min(Fixed &a, Fixed &b)
@@ -175,4 +175,30 @@ const Fixed& Fixed::max(const Fixed &a, const Fixed &b)
 		return (a);
 	else
 		return (b);
+}
+
+Fixed&	Fixed::operator++( void )
+{
+	this->fixed_point++;
+	return (*this);
+}
+
+Fixed&	Fixed::operator--( void )
+{
+	this->fixed_point--;
+	return (*this);
+}
+
+Fixed	Fixed::operator++(int)
+{
+	Fixed old = *this;
+	this->fixed_point++;
+	return (old);
+}
+
+Fixed	Fixed::operator--(int)
+{
+	Fixed old = *this;
+	this->fixed_point--;
+	return (old);
 }

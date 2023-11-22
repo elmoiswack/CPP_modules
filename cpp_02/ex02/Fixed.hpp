@@ -33,10 +33,15 @@ public:
 	bool	operator==(Fixed& refference);
 	bool	operator!=(Fixed& refference);
 
-	Fixed	operator+(Fixed& reference);
-	Fixed	operator-(Fixed& reference);
-	Fixed	operator*(Fixed& reference);
-	Fixed	operator/(Fixed& reference);
+	Fixed	operator+(const Fixed& reference);
+	Fixed	operator-(const Fixed& reference);
+	Fixed	operator*(const Fixed& reference);
+	Fixed	operator/(const Fixed& reference);
+
+	Fixed&	operator++( void );
+	Fixed&	operator--( void );
+	Fixed	operator++(int);
+	Fixed	operator--(int);
 };
 
 std::ostream& operator<<(std::ostream &output, const Fixed &fixed);

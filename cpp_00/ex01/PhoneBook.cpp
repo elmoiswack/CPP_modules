@@ -5,6 +5,7 @@ int	PhoneBook::get_lenght(std::string string)
 {
 	int	index;
 
+	index = 0;
 	while (string[index])
 		index++;
 	return (index);

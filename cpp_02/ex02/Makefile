@@ -1,11 +1,11 @@
-NAME	:=	Phonebook
+NAME	:=	Fixed
 
-SRC	:=	Contact.cpp \
-		PhoneBook.cpp \
+SRC	:=	main.cpp \
+		Fixed.cpp \
 
 OBJ := $(SRC:.cpp=.o)
 
-CC	:=	c++ -g -fsanitize=address
+CC	:=	c++
 
 CFLAGS	:= -Wall -Wextra -Werror -std=c++98
 

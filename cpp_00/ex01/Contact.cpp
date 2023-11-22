@@ -33,16 +33,16 @@ std::string Contact::get_secret(Contact contact)
 
 int	Contact::check_input(std::string input)
 {
-	int size;
+	int	count = 0;
+	int	index = 0;
 
-	size = 0;
-	while (input[size])
+	while (input[index])
 	{
-		if (isspace(input[size]) != 0)
-			return (-1);
-		size++;
+		if (std::isspace(input[index]) != 0)
+			count++;
+		index++;
 	}
-	if (size == 0)
+	if (count == index)
 		return (-1);
 	return (1);
 }

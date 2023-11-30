@@ -16,6 +16,7 @@ int	main(void)
 	std::cout << "Human B:" << std::endl;
 	Weapon sword = Weapon("shiny sharp sword");
 	HumanB jim("Jim");
+	jim.attack();
 	jim.setWeapon(sword);
 	jim.attack();
 	sword.setType("some other type of sword");

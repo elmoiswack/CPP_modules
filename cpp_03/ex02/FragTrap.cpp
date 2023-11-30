@@ -4,7 +4,7 @@ FragTrap::FragTrap(std::string name)
 {
 	std::cout << "FragTrap constructor is called and name is set!" << std::endl;
 	this->name = name;
-	this->hit_points = 100;
+	this->hit_points = ClapTrap::hit_points;
 	this->energy_points = 100;
 	this->attack_damage = 30;
 }

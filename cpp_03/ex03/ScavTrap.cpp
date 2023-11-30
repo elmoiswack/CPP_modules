@@ -4,7 +4,7 @@ ScavTrap::ScavTrap(std::string name)
 {
 	std::cout << "ScavTrap constructor is called and name is set!" << std::endl;
 	this->name = name;
-	this->hit_points = 100;
+	this->hit_points = ClapTrap::hit_points;
 	this->energy_points = 50;
 	this->attack_damage = 20;
 }
@@ -13,7 +13,7 @@ ScavTrap::ScavTrap()
 {
 	std::cout << "ScavTrap default constructor without name is called!" << std::endl;
 	this->name = "Empty";
-	this->hit_points = 100;
+	this->hit_points = ClapTrap::hit_points;
 	this->energy_points = 50;
 	this->attack_damage = 20;	
 }

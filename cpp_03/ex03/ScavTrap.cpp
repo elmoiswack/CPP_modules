@@ -35,7 +35,7 @@ void	ScavTrap::attack(const std::string& target)
 		std::cout << "ScavTrap " << this->name << " is dead!" << std::endl;
 		return ;
 	}
-	std::cout << "Scavtrap " << this->name << " attacks " << target << std::endl;
+	std::cout << "Scavtrap: " << this->name << " is charging towards " << target << ", dealing " << this->attack_damage << " ammount of damage" << std::endl;
 	this->energy_points -= 1;
 }
 

@@ -15,9 +15,9 @@ CFLAGS	:= -Wall -Wextra -Werror -std=c++98
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $^ -o $(NAME)
+	$(CC) $(CFLAGS) $^ -o $(NAME)
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

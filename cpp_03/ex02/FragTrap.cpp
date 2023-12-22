@@ -16,5 +16,5 @@ FragTrap::~FragTrap()
 
 void	FragTrap::highFivesGuys()
 {
-	std::cout << "Come on, I know you want to give me a high-five!" << std::endl;
+	std::cout << "Come on, I know you want to give me a high-five! Cmon pall, give ya boy " << this->name << " a good smack!" << std::endl;
 }

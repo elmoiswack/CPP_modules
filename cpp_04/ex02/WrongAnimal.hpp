@@ -9,8 +9,10 @@ protected:
 	std::string type;
 public:
 	WrongAnimal();
-	~WrongAnimal();
+	WrongAnimal(const WrongAnimal &in);
+	virtual ~WrongAnimal();
 	void	makeSound() const;
+	WrongAnimal& operator=(const WrongAnimal &in);
 	std::string getType() const;
 };
 

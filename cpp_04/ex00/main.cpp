@@ -15,6 +15,7 @@ int	main(void)
 	std::cout << std::endl;
 	std::cout << j->getType() << " " << std::endl;
 	std::cout << i->getType() << " " << std::endl;
+	std::cout << meta->getType() << " " << std::endl;
 
 	std::cout << std::endl;
 	i->makeSound();

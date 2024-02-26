@@ -10,7 +10,7 @@ SRC	:=	main.cpp \
 
 OBJ := $(SRC:.cpp=.o)
 
-CC	:=	c++
+CC	:=	c++ -g -fsanitize=address
 
 CFLAGS	:= -Wall -Wextra -Werror -std=c++98
 

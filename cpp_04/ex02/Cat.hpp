@@ -11,7 +11,9 @@ private:
 	Brain* catBrain;
 public:
 	Cat();
+	Cat(const Cat &in);
 	~Cat();
+	Cat& operator=(const Cat &in);
 	void	makeSound() const;
 	std::string getType() const;
 };

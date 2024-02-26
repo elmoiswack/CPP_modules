@@ -11,6 +11,8 @@ private:
 	Brain* dogBrain;
 public:
 	Dog();
+	Dog(const Dog &in);
+	Dog& operator=(const Dog &in);
 	~Dog();
 	void	makeSound() const;
 	const std::string getType() const;

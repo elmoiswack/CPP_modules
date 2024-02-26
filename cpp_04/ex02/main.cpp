@@ -7,6 +7,7 @@
 
 int	main(void)
 {
+
 	//const Animal* meta = new Animal();
 	const Animal* j = new Dog();
 	const Animal* i = new Cat();
@@ -41,6 +42,13 @@ int	main(void)
 	delete wanim;
 	delete wcat;
 	
+	std::cout << "Copy constructors" << std::endl;
+
+	const Animal* d = new Cat();
+	const Animal* copy = new Cat(*((Cat *)d));
+
+	delete d;
+	delete copy;
 	std::cout << std::endl;
 
 	Animal* arr[10];

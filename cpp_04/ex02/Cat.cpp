@@ -7,6 +7,24 @@ Cat::Cat()
 	this->catBrain = new Brain();
 }
 
+Cat::Cat(const Cat &in)
+{
+	std::cout << "Cat copy constructor is called!" << std::endl;
+	this->catBrain = NULL;
+	*this = in;
+}
+
+Cat& Cat::operator=(const Cat &in)
+{
+	std::cout << "Cat '=' operator overload is called!" << std::endl;
+	if (this == &in)
+		return (*this);
+	this->type = in.type;
+	delete this->catBrain;
+	this->catBrain = new Brain(*in.catBrain);
+	return (*this);
+}
+
 Cat::~Cat()
 {
 	std::cout << "Cat deconstructor is called!" << std::endl;

@@ -7,6 +7,24 @@ Dog::Dog()
 	this->dogBrain = new Brain();
 }
 
+Dog::Dog(const Dog &in)
+{
+	std::cout << "Dog copy constructor is called!" << std::endl;
+	this->dogBrain = NULL;
+	*this = in;
+}
+
+Dog& Dog::operator=(const Dog &in)
+{
+	std::cout << "Dog '=' operator overload is called!" << std::endl;
+	if (this == &in)
+		return (*this);
+	this->type = in.type;
+	delete this->dogBrain;
+	this->dogBrain = new Brain(*in.dogBrain);
+	return (*this);
+}
+
 Dog::~Dog()
 {
 	std::cout << "Dog deconstructor is called!" << std::endl;

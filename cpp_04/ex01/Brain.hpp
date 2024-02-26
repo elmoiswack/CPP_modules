@@ -10,6 +10,8 @@ private:
 public:
 	Brain();
 	~Brain();
+	Brain(const Brain& in);
+	Brain& operator=(const Brain& in);
 };
 
 #endif

@@ -6,6 +6,21 @@ Dog::Dog()
 	this->type = "Dog";
 }
 
+Dog::Dog(const Dog &in)
+{
+	std::cout << "Dog copy constructor is called!" << std::endl;
+	*this = in;
+}
+
+Dog& Dog::operator=(const Dog &in)
+{
+	std::cout << "Dog '=' operator overload is called!" << std::endl;
+	if (this == &in)
+		return (*this);
+	this->type = in.type;
+	return (*this);
+}
+
 Dog::~Dog()
 {
 	std::cout << "Dog deconstructor is called!" << std::endl;

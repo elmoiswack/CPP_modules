@@ -1,4 +1,5 @@
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 int	main(void)
 {
@@ -26,6 +27,18 @@ int	main(void)
 	std::cout << c << std::endl;
 	c.incrementGrade();
 	std::cout << c << std::endl;
+	
+	Form Contract("AH", 50, 20);
+	std::cout << std::endl;
+	std::cout << Contract << std::endl;
+	std::cout << std::endl;
+	Contract.beSigned(c);
+	Contract.beSigned(b);
+	Contract.beSigned(a);
+	std::cout << std::endl;
+	c.signForm(Contract);
+	b.signForm(Contract);
+	a.signForm(Contract);
 	
 	std::cout << std::endl;
 }

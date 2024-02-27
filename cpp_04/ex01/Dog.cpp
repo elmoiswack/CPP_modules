@@ -10,8 +10,10 @@ Dog::Dog()
 Dog::Dog(const Dog &in)
 {
 	std::cout << "Dog copy constructor is called!" << std::endl;
+	std::cout << "Adress of in.dogBrain = " << &in.dogBrain << std::endl;
 	this->dogBrain = NULL;
 	*this = in;
+	std::cout << "Adress of THIS->brain = " << &this->dogBrain << std::endl;
 }
 
 Dog& Dog::operator=(const Dog &in)

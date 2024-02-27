@@ -1,13 +1,13 @@
 #include "Form.hpp"
 
-Form::Form(std::string name, int grade, int execGrade)
+Form::Form(std::string name, int signGrade, int execGrade)
 {
 	std::cout << "Form default constructor is called!" << std::endl;
 	try
 	{
-		if (grade < 1)
+		if (signGrade < 1)
 			throw (1);
-		if (grade > 150)
+		if (signGrade > 150)
 			throw (2);
 		if (execGrade < 1)
 			throw (3);
@@ -32,13 +32,40 @@ Form::Form(std::string name, int grade, int execGrade)
 		}
 		else if (error == 3 || error == 4)
 		{
-			std::cout << "execGrade "
+			std::cout << "ExecGrade exception" << std::endl;
+			if (error == 3)
+			{
+				this->GradeTooHighException();
+				return ;
+			}
+			if (error == 5)
+			{
+				this->GradeTooLowException();
+				return ;
+			}			
 		}
 	}
 	this->_name = name;
-	this->_grade = grade;
+	this->_signGrade = signGrade;
 	this->_execGrade = execGrade;
 	this->_signed = false;
+}
+
+Form::Form(const Form &in)
+{
+	std::cout << "Form copy constructor is called!" << std::endl;
+	*this = in;
+}
+
+Form& Form::operator=(const Form &in)
+{
+	if (this == &in)
+		return (*this);
+	this->_name = in._name;
+	this->_signGrade = in._signGrade;
+	this->_execGrade = in._execGrade;
+	this->_signed = in._signed;
+	return (*this);
 }
 
 Form::~Form()
@@ -56,9 +83,23 @@ void	Form::GradeTooLowException()
 	std::cout << "The grade isn't valid, it's too low!" << std::endl;
 }
 
-void	Form::beSigned(const Bureaucrat &in)
+void	Form::beSigned(Bureaucrat &in)
 {
-
+	try
+	{
+		if (this->_signGrade < in.getGrade())
+			throw (1);
+	}
+	catch(int error)
+	{
+		if (error == 1)
+		{
+			std::cout << "beSigned exception!" << std::endl;
+			this->GradeTooLowException();
+			return ;
+		}
+	}
+	this->_signed = true;
 }
 
 std::string	Form::getName()
@@ -68,7 +109,7 @@ std::string	Form::getName()
 
 int	Form::getGrade()
 {
-	return (this->_grade);
+	return (this->_signGrade);
 }
 
 int	Form::getExecGrade()
@@ -83,5 +124,6 @@ bool	Form::getSigned()
 
 std::ostream& operator<<(std::ostream &out, Form &in)
 {
-
+	out << "Form name: " << in.getName() << ", is the form signed: " << in.getSigned() << ", minimal grade to sign is: " << in.getGrade() << ", minimal grade to execute is: " << in.getExecGrade();
+	return (out);
 }

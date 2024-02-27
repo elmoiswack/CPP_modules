@@ -42,11 +42,12 @@ int	main(void)
 	delete wanim;
 	delete wcat;
 	
+	std::cout << std::endl;
 	std::cout << "Copy constructors" << std::endl;
 
 	const Animal* d = new Cat();
 	const Animal* copy = new Cat(*((Cat *)d));
-
+	std::cout << std::endl;
 	delete d;
 	delete copy;
 	std::cout << std::endl;

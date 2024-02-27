@@ -10,8 +10,10 @@ Cat::Cat()
 Cat::Cat(const Cat &in)
 {
 	std::cout << "Cat copy constructor is called!" << std::endl;
+	std::cout << "Adress of in.catBrain = " << &in.catBrain << std::endl;
 	this->catBrain = NULL;
 	*this = in;
+	std::cout << "Adress of this->catBrain = " << &this->catBrain << std::endl;
 }
 
 Cat& Cat::operator=(const Cat &in)

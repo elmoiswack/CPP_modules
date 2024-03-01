@@ -78,18 +78,47 @@ void	Bureaucrat::incrementGrade()
 }
 
 
-int	Bureaucrat::getGrade()
+int	Bureaucrat::getGrade() const
 {
 	return (this->_grade);
 }
 
-const std::string Bureaucrat::getName()
+const std::string Bureaucrat::getName() const
 {
 	return (this->_name);
+}
+
+void	Bureaucrat::signAForm(AForm &in)
+{
+	if (in.getSigned() == true)
+	{
+		std::cout << this->_name << " signed " << in.getName() << std::endl;
+	}
+	else
+		std::cout << "The " << in.getName() << " AForm hasn't been authorized by a superior!" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream &out, Bureaucrat &in)
 {
 	out << in.getName() << ", bureaucrat grade " << in.getGrade();
 	return (out);
+}
+
+void Bureaucrat::executeForm(AForm const & form)
+{
+	try
+	{
+		if (form.getSigned() != true)
+			throw (AForm::FormSignedFalseException());
+		if (this->getGrade() < form.getExecGrade())
+			throw (AForm::FormBureauExecException());		
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return ;
+	}
+	if (form.getSigned() == true && this->_grade < form.getExecGrade())
+		std::cout << this->getName() << " executed " << form.getName();
+	return ;
 }

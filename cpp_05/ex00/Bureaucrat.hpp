@@ -13,11 +13,27 @@ public:
 	~Bureaucrat();
 
 	Bureaucrat& operator=(Bureaucrat &in);
-	
-	void	GradeTooHighException();
-	void	GradeTooLowException();
+
 	void	incrementGrade();
 	void	decrementGrade();
+
+class GradeTooHighException : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return ("The grade you are trying to set isn't in scope! The grade is too high!");
+	}
+};
+
+class GradeTooLowException : public std::exception
+{
+public:
+	const char *what() const throw()
+	{
+		return ("The grade you are trying to set isn't in scope! The grade is too low!");
+	}
+};
 
 	const std::string	getName();
 	int		getGrade();

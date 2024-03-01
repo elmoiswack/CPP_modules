@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Bureaucrat.hpp"
 
+class Bureaucrat;
+
 class Form
 {
 private:
@@ -15,8 +17,6 @@ public:
 	~Form();
 	Form(const Form &in);
 	Form& operator=(const Form &in);
-	void	GradeTooHighException();
-	void	GradeTooLowException();
 
 	std::string	getName();
 	int			getGrade();
@@ -24,6 +24,23 @@ public:
 	bool		getSigned();
 
 	void	beSigned(Bureaucrat &in);
+
+class GradeTooHighException : public std::exception
+{
+	const char *what() const throw()
+	{
+		return ("The FORM grade you are trying to is too high!");
+	}
+};
+
+	class GradeTooLowException : public std::exception
+	{
+		const char *what() const throw()
+		{
+			return ("The FORM grade you are trying to set is too low or the Bureaucrat grade is too low to sign!");
+		}
+	};
+
 };
 
 std::ostream& operator<<(std::ostream &out, Form &in);

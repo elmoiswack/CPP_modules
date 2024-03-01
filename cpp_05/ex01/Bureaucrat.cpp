@@ -6,24 +6,16 @@ Bureaucrat::Bureaucrat(const std::string name, int grade)
 	try
 	{
 		if (grade < 1)
-			throw (1);
+			throw (GradeTooHighException());
 		if (grade > 150)
-			throw (2);
+			throw (GradeTooLowException());
 	}
-	catch (int which)
+	catch(const std::exception& e)
 	{
-		std::cout << "Exception is caught!" << std::endl;
-		if (which == 1)
-		{
-			this->GradeTooHighException();
-			return ;
-		}
-		else if (which == 2)
-		{
-			this->GradeTooLowException();
-			return ;
-		}
-	}
+		std::cout << "Bureaucrat constructor exception caught!" << std::endl;
+		std::cerr << e.what() << std::endl;
+		return ;
+	}	
 	this->_name = name;
 	this->_grade = grade;
 }
@@ -31,14 +23,13 @@ Bureaucrat::Bureaucrat(const std::string name, int grade)
 Bureaucrat::Bureaucrat(Bureaucrat& in)
 {
 	std::cout << "Bureaucrat copy constructor is called!" << std::endl;
-	if (this != &in)
-	{
-		*this = in;
-	}
+	*this = in;
 }
 
 Bureaucrat& Bureaucrat::operator=(Bureaucrat &in)
 {
+	if (this == &in)
+		return (*this);
 	this->_name = in._name;
 	this->_grade = in._grade;
 	return (*this);
@@ -49,28 +40,18 @@ Bureaucrat::~Bureaucrat()
 	std::cout << "Bureaucrat default deconstructor is called!" << std::endl;
 }
 
-void	Bureaucrat::GradeTooHighException()
-{
-	std::cout << "The grade you are trying to set isn't in scope! The grade is too high!" << std::endl;
-}
-
-void	Bureaucrat::GradeTooLowException()
-{
-	std::cout << "The grade you are trying to set isn't in scope! The grade is too low!" << std::endl;
-}
 
 void	Bureaucrat::decrementGrade()
 {
 	try
 	{
 		if (this->_grade == 150)
-			throw (1);
+			throw (GradeTooLowException());
 	}
-	catch (int error)
+	catch(const std::exception& e)
 	{
-		std::cout << "Exception is caught!" << std::endl;
-		if (error == 1)
-			this->GradeTooLowException();
+		std::cout << "DecrementGrade exception caught!" << std::endl;
+		std::cerr << e.what() << std::endl;
 		return ;
 	}
 	std::cout << this->getName() << " grade is decremented from: " << this->getGrade();
@@ -79,19 +60,18 @@ void	Bureaucrat::decrementGrade()
 }
 
 void	Bureaucrat::incrementGrade()
-{
+{	
 	try
 	{
 		if (this->_grade == 1)
-			throw (1);
+			throw (GradeTooHighException());
 	}
-	catch (int error)
+	catch(const std::exception& e)
 	{
-		std::cout << "Exception is caught!" << std::endl;
-		if (error == 1)
-			this->GradeTooHighException();
+		std::cout << "IncrementGrade exception caught!" << std::endl;
+		std::cerr << e.what() << std::endl;
 		return ;
-	}	
+	}
 	std::cout << this->getName() << " grade is incremented from: " << this->getGrade();
 	this->_grade -= 1;
 	std::cout << " to: " << this->getGrade() << std::endl;
@@ -108,20 +88,18 @@ const std::string Bureaucrat::getName()
 	return (this->_name);
 }
 
+void	Bureaucrat::signForm(Form &in)
+{
+	if (in.getSigned() == true)
+	{
+		std::cout << this->_name << " signed " << in.getName() << std::endl;
+	}
+	else
+		std::cout << "The " << in.getName() << " form hasn't been authorized by a superior!" << std::endl;
+}
+
 std::ostream& operator<<(std::ostream &out, Bureaucrat &in)
 {
 	out << in.getName() << ", bureaucrat grade " << in.getGrade();
 	return (out);
-}
-
-void	Bureaucrat::signForm(Form &in)
-{
-	if (in.getSigned() == true && this->_grade < in.getGrade())
-	{
-		std::cout << this->getName() << " signed " << in.getName() << std::endl;
-	}
-	else
-	{
-		std::cout << this->getName() << " couldn't sign " << in.getName() << "because grade is too low" << std::endl;
-	}
 }

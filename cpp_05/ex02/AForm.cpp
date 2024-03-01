@@ -1,8 +1,13 @@
-#include "Form.hpp"
+#include "AForm.hpp"
 
-Form::Form(std::string name, int signGrade, int execGrade)
+AForm::AForm()
 {
-	std::cout << "Form default constructor is called!" << std::endl;
+	std::cout << "AForm default constructor is called!" << std::endl;
+}
+
+AForm::AForm(std::string name, int signGrade, int execGrade)
+{
+	std::cout << "AForm default constructor is called and vars have been set!" << std::endl;
 	try
 	{
 		if (signGrade < 1)
@@ -16,7 +21,7 @@ Form::Form(std::string name, int signGrade, int execGrade)
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "Form constructor exception caught!" << std::endl;
+		std::cout << "AForm constructor exception caught!" << std::endl;
 		std::cerr << e.what() << std::endl;
 		return ;
 	}
@@ -27,13 +32,13 @@ Form::Form(std::string name, int signGrade, int execGrade)
 	this->_signed = false;
 }
 
-Form::Form(const Form &in)
+AForm::AForm(const AForm &in)
 {
-	std::cout << "Form copy constructor is called!" << std::endl;
+	std::cout << "AForm copy constructor is called!" << std::endl;
 	*this = in;
 }
 
-Form& Form::operator=(const Form &in)
+AForm& AForm::operator=(const AForm &in)
 {
 	if (this == &in)
 		return (*this);
@@ -44,12 +49,12 @@ Form& Form::operator=(const Form &in)
 	return (*this);
 }
 
-Form::~Form()
+AForm::~AForm()
 {
-	std::cout << "Form default deconstructor is called!" << std::endl;
+	std::cout << "AForm default deconstructor is called!" << std::endl;
 }
 
-void	Form::beSigned(Bureaucrat &in)
+void	AForm::beSigned(Bureaucrat &in)
 {
 	try
 	{
@@ -58,37 +63,37 @@ void	Form::beSigned(Bureaucrat &in)
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "Form beSigned exception caught!" << std::endl;
+		std::cout << "AForm beSigned exception caught!" << std::endl;
 		std::cerr << e.what() << '\n';
 		return ;
 	}
-	std::cout << "The " << this->_name << " form has been signed by " << in.getName() << std::endl;
+	std::cout << "The " << this->_name << " AForm has been signed by " << in.getName() << std::endl;
 	this->_signed = true;
 }
 
-std::string	Form::getName()
+const std::string	AForm::getName() const
 {
 	return (this->_name);
 }
 
-int	Form::getGrade()
+int	AForm::getGrade() const
 {
 	return (this->_signGrade);
 }
 
-int	Form::getExecGrade()
+int	AForm::getExecGrade() const
 {
 	return (this->_execGrade);
 }
 
-bool	Form::getSigned()
+bool	AForm::getSigned() const
 {
 	return (this->_signed);
 }
 
-std::ostream& operator<<(std::ostream &out, Form &in)
+std::ostream& operator<<(std::ostream &out, AForm &in)
 {
-	out << "Form name: " << in.getName() << ", is the form signed: ";
+	out << "AForm name: " << in.getName() << ", is the AForm signed: ";
 	if (in.getSigned() == false)
 	{
 		out << "false";

@@ -28,17 +28,44 @@ int	main(void)
 	c.incrementGrade();
 	std::cout << c << std::endl;
 	
-	Form Contract("AH", 50, 20);
 	std::cout << std::endl;
-	std::cout << Contract << std::endl;
+	std::cout << "---------FORMS---------" << std::endl;
+
 	std::cout << std::endl;
-	Contract.beSigned(c);
-	Contract.beSigned(b);
-	Contract.beSigned(a);
+	Form ContractAH("AH_medewerker", 50, 20);
+	Form contractDIRK("Dirk_medewerker", 140, 5);
+	Form contractLIDL("Lidl_medewerker", 157, 3);
+	Form contractJUMBO("Jumbo_medewerker", 143, -420);
 	std::cout << std::endl;
-	c.signForm(Contract);
-	b.signForm(Contract);
-	a.signForm(Contract);
+	std::cout << ContractAH << std::endl;
+	std::cout << contractDIRK << std::endl;
 	
+	std::cout << std::endl;
+	ContractAH.beSigned(c);
+	ContractAH.beSigned(b);
+	ContractAH.beSigned(a);
+
+	std::cout << std::endl;
+	std::cout << ContractAH << std::endl;
+
+	std::cout << std::endl;
+	c.signForm(ContractAH);
+	b.signForm(ContractAH);
+	a.signForm(ContractAH);
+
+	std::cout << std::endl;
+	c.signForm(contractDIRK);
+
+	std::cout << std::endl;
+	contractDIRK.beSigned(c);
+	contractDIRK.beSigned(b);
+
+	std::cout << std::endl;
+	c.signForm(contractDIRK);
+	b.signForm(contractDIRK);
+
+	std::cout << std::endl;
+	std::cout << contractDIRK << std::endl;
+
 	std::cout << std::endl;
 }

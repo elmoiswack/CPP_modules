@@ -90,6 +90,10 @@ int	main(void)
 	RRF.beSigned(lord);
 	SCF.beSigned(lord);
 
+	std::cout << std::endl;
+	bruh.executeForm(PPF);
+	lord.executeForm(PPF);
+
 	std::cout << std::endl;	
 	PPF.execute(bruh);
 	RRF.execute(bruh);
@@ -99,5 +103,6 @@ int	main(void)
 	PPF.execute(lord);
 	RRF.execute(lord);
 	SCF.execute(lord);
+
 	std::cout << std::endl;
 }

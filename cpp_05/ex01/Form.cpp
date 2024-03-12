@@ -1,6 +1,6 @@
 #include "Form.hpp"
 
-Form::Form(std::string name, int signGrade, int execGrade)
+Form::Form(std::string name, int signGrade, int execGrade) : _name(name)
 {
 	std::cout << "Form default constructor is called!" << std::endl;
 	try
@@ -16,18 +16,17 @@ Form::Form(std::string name, int signGrade, int execGrade)
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "Form constructor exception caught!" << std::endl;
+		std::cout << "Form constructor exception caught with " << name << " Form!" << std::endl;
 		std::cerr << e.what() << std::endl;
 		return ;
 	}
 
-	this->_name = name;
 	this->_signGrade = signGrade;
 	this->_execGrade = execGrade;
 	this->_signed = false;
 }
 
-Form::Form(const Form &in)
+Form::Form(Form &in) : _name(in.getName())
 {
 	std::cout << "Form copy constructor is called!" << std::endl;
 	*this = in;
@@ -37,7 +36,6 @@ Form& Form::operator=(const Form &in)
 {
 	if (this == &in)
 		return (*this);
-	this->_name = in._name;
 	this->_signGrade = in._signGrade;
 	this->_execGrade = in._execGrade;
 	this->_signed = in._signed;
@@ -58,15 +56,17 @@ void	Form::beSigned(Bureaucrat &in)
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "Form beSigned exception caught!" << std::endl;
+		std::cout << "Form beSigned exception caught with " << this->_name << " AForm!" << std::endl;
 		std::cerr << e.what() << '\n';
+		in.signForm(*this);
 		return ;
 	}
 	std::cout << "The " << this->_name << " form has been signed by " << in.getName() << std::endl;
 	this->_signed = true;
+	in.signForm(*this);
 }
 
-std::string	Form::getName()
+const std::string	Form::getName()
 {
 	return (this->_name);
 }

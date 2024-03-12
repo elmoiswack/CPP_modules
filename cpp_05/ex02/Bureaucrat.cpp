@@ -1,6 +1,6 @@
 #include "Bureaucrat.hpp"
 
-Bureaucrat::Bureaucrat(const std::string name, int grade)
+Bureaucrat::Bureaucrat(const std::string name, int grade) : _name(name)
 {
 	std::cout << "Bureaucrat default constructor is called!" << std::endl;
 	try
@@ -15,12 +15,11 @@ Bureaucrat::Bureaucrat(const std::string name, int grade)
 		std::cout << "Bureaucrat constructor exception caught!" << std::endl;
 		std::cerr << e.what() << std::endl;
 		return ;
-	}	
-	this->_name = name;
+	}
 	this->_grade = grade;
 }
 
-Bureaucrat::Bureaucrat(Bureaucrat& in)
+Bureaucrat::Bureaucrat(Bureaucrat& in) : _name(in.getName())
 {
 	std::cout << "Bureaucrat copy constructor is called!" << std::endl;
 	*this = in;
@@ -30,7 +29,6 @@ Bureaucrat& Bureaucrat::operator=(Bureaucrat &in)
 {
 	if (this == &in)
 		return (*this);
-	this->_name = in._name;
 	this->_grade = in._grade;
 	return (*this);
 }
@@ -106,5 +104,18 @@ std::ostream& operator<<(std::ostream &out, Bureaucrat &in)
 
 void Bureaucrat::executeForm(AForm const & form)
 {
+	try
+	{
+		if (form.getSigned() != true)
+			throw (AForm::FormSignedFalseException());
+		if (this->getGrade() > form.getExecGrade())
+			throw (AForm::FormBureauExecException());
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return ;
+	}
 	form.execute(*this);
+	std::cout << this->getName() << " executed " << form.getName() << std::endl;
 }

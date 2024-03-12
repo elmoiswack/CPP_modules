@@ -5,7 +5,7 @@ AForm::AForm()
 	std::cout << "AForm default constructor is called!" << std::endl;
 }
 
-AForm::AForm(std::string name, int signGrade, int execGrade)
+AForm::AForm(std::string name, int signGrade, int execGrade) : _name(name)
 {
 	std::cout << "AForm default constructor is called and vars have been set!" << std::endl;
 	try
@@ -21,18 +21,17 @@ AForm::AForm(std::string name, int signGrade, int execGrade)
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "AForm constructor exception caught!" << std::endl;
+		std::cout << "AForm constructor exception caught with " << name << " AForm!" << std::endl;
 		std::cerr << e.what() << std::endl;
 		return ;
 	}
 
-	this->_name = name;
 	this->_signGrade = signGrade;
 	this->_execGrade = execGrade;
 	this->_signed = false;
 }
 
-AForm::AForm(const AForm &in)
+AForm::AForm(AForm &in) : _name(in.getName())
 {
 	std::cout << "AForm copy constructor is called!" << std::endl;
 	*this = in;
@@ -42,7 +41,6 @@ AForm& AForm::operator=(const AForm &in)
 {
 	if (this == &in)
 		return (*this);
-	this->_name = in._name;
 	this->_signGrade = in._signGrade;
 	this->_execGrade = in._execGrade;
 	this->_signed = in._signed;
@@ -63,7 +61,7 @@ void	AForm::beSigned(Bureaucrat &in)
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << "AForm beSigned exception caught!" << std::endl;
+		std::cout << "Form beSigned exception caught with " << this->_name << " AForm!" << std::endl;
 		std::cerr << e.what() << '\n';
 		return ;
 	}

@@ -8,30 +8,30 @@ class Bureaucrat;
 class Form
 {
 private:
-	std::string _name;
+	const std::string _name;
 	bool		_signed;
 	int			_signGrade;
 	int			_execGrade;
 public:
 	Form(std::string name, int signGrade, int execGrade);
 	~Form();
-	Form(const Form &in);
+	Form(Form &in);
 	Form& operator=(const Form &in);
 
-	std::string	getName();
+	const std::string	getName();
 	int			getGrade();
 	int			getExecGrade();
 	bool		getSigned();
 
 	void	beSigned(Bureaucrat &in);
 
-class GradeTooHighException : public std::exception
-{
-	const char *what() const throw()
+	class GradeTooHighException : public std::exception
 	{
-		return ("The FORM grade you are trying to is too high!");
-	}
-};
+		const char *what() const throw()
+		{
+			return ("The FORM grade you are trying to is too high!");
+		}
+	};
 
 	class GradeTooLowException : public std::exception
 	{

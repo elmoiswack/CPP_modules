@@ -49,20 +49,8 @@ int	main(void)
 	std::cout << ContractAH << std::endl;
 
 	std::cout << std::endl;
-	c.signForm(ContractAH);
-	b.signForm(ContractAH);
-	a.signForm(ContractAH);
-
-	std::cout << std::endl;
-	c.signForm(contractDIRK);
-
-	std::cout << std::endl;
 	contractDIRK.beSigned(c);
 	contractDIRK.beSigned(b);
-
-	std::cout << std::endl;
-	c.signForm(contractDIRK);
-	b.signForm(contractDIRK);
 
 	std::cout << std::endl;
 	std::cout << contractDIRK << std::endl;

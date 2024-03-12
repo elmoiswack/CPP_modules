@@ -8,7 +8,7 @@ class AForm;
 class Bureaucrat
 {
 private:
-	std::string _name;
+	const std::string _name;
 	int	_grade;
 public:
 	Bureaucrat(const std::string name, int grade);

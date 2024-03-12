@@ -119,4 +119,20 @@ int	main(void)
 	newForm->execute(Jack);
 	std::cout << std::endl;
 	delete newForm;
+	std::cout << std::endl;
+	newForm = Brother.makeForm("presidential pardon", "mahboyprezz");
+	std::cout << std::endl;
+	newForm->beSigned(Jack);
+	std::cout << std::endl;
+	newForm->execute(Jack);
+	std::cout << std::endl;
+	delete newForm;
+	std::cout << std::endl;
+	newForm = Brother.makeForm("shrubbery creation", "touchgrass");
+	std::cout << std::endl;
+	newForm->beSigned(Jack);
+	std::cout << std::endl;
+	newForm->execute(Jack);
+	std::cout << std::endl;
+	delete newForm;
 }

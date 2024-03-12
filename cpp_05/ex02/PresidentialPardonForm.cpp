@@ -37,7 +37,6 @@ void PresidentialPardonForm::execute(Bureaucrat const & executor) const
 	{
 		std::cout << "PresidentialPardonForm exception caught!" << std::endl;
 		std::cerr << e.what() << '\n';
-		std::cout << "Zaphod Beeblebrox is dissapointed at: " << this->_target << std::endl;
 		return ;
 	}
 	if (this->getSigned() == true && executor.getGrade() < this->getExecGrade())

@@ -210,7 +210,7 @@ void ScalarConverter::convert(char *input)
         return (convertFromF(std::atof(input)));
     else if (is_decimal == true && is_digit == true)
         return (convertFromD(std::atof(input)));
-    else if (is_digit == true)
+    else if (is_digit == true && is_char != true)
         return (convertFromI(std::atoi(input)));
     else 
     {

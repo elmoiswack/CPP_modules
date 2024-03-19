@@ -31,17 +31,17 @@ Base* generate(void)
 void identify(Base* p)
 {
 	std::cout << "Pointers are cool!" << std::endl;
-	if (dynamic_cast<A *>(p))
+	if (dynamic_cast<A *>(p) != NULL)
 	{
 		std::cout << "Identified A class!" << std::endl;
 		return ;
 	}
-	else if (dynamic_cast<B *>(p))
+	else if (dynamic_cast<B *>(p) != NULL)
 	{
 		std::cout << "Identified B class!" << std::endl;
 		return ;
 	}
-	else if (dynamic_cast<C *>(p))
+	else if (dynamic_cast<C *>(p) != NULL)
 	{
 		std::cout << "Identified C class!" << std::endl;
 		return ;
@@ -52,20 +52,41 @@ void identify(Base* p)
 void identify(Base& p)
 {
 	std::cout << "Pointers are dumb!" << std::endl;
-	if (dynamic_cast<A *>(&p))
+	try
 	{
+		A Albert;
+
+		Albert = dynamic_cast<A &>(p);
 		std::cout << "Identified A class!" << std::endl;
-		return ;
+		return ;		
 	}
-	else if (dynamic_cast<B *>(&p))
+	catch(const std::exception& e)
 	{
+		std::cerr << e.what() << '\n';
+	}
+	try
+	{
+		B Bert;
+
+		Bert = dynamic_cast<B &>(p);
 		std::cout << "Identified B class!" << std::endl;
-		return ;
+		return ;		
 	}
-	else if (dynamic_cast<C *>(&p))
+	catch(const std::exception& e)
 	{
+		std::cerr << e.what() << '\n';
+	}
+	try
+	{
+		C Charley;
+
+		Charley = dynamic_cast<C &>(p);
 		std::cout << "Identified C class!" << std::endl;
-		return ;
+		return ;		
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
 	}
 	std::cout << "The base * is neither A, B or C. What happend??????????" << std::endl;
 }
@@ -73,13 +94,18 @@ void identify(Base& p)
 int	main(void)
 {
 	Base *ptr;
+	Base *test = NULL;
+
 	ptr = generate();
 	std::cout << std::endl;
 	identify(ptr);
 	std::cout << std::endl;
 	identify(*ptr);
 	std::cout << std::endl;
-	identify(NULL);
+	identify(test);
+	std::cout << std::endl;
+	identify(*test);
+
 	std::cout << std::endl;
 	delete ptr;
 	return 0;

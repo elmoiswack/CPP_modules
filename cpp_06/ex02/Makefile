@@ -1,7 +1,7 @@
-NAME	:=	Scalar
+NAME	:=	Base
 
 SRC	:=	main.cpp \
-		ScalarConverter.cpp \
+		Base.cpp \
 
 OBJ := $(SRC:.cpp=.o)
 

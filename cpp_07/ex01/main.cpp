@@ -22,18 +22,18 @@ void	str_test(T input)
 int	main(void)
 {
 	const int arr[] = {4, 76, 42432};
-	iter(arr, 3, intchar_ft);
+	iter(arr, 3, intchar_ft<const int &>);
 	std::cout << std::endl;
 	
 	const char bruh[] = {'f', '3', 'h', 12};
-	iter(bruh, 4, intchar_ft);
+	iter(bruh, 4, intchar_ft<const char &>);
 	std::cout << std::endl;
 	
 	std::string nani[] = {"Chad", "Brad", "brother"};
-	iter(nani, 3, str_test);
+	iter(nani, 3, str_test<std::string &>);
 	std::cout << std::endl;
 
 	const char *last[] = {"Nicole", "Patricia", "sister"};
-	iter(last, 3, str_test);
+	iter(last, 3, str_test<const char *>);
 	std::cout << std::endl;
 }

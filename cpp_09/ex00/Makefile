@@ -1,6 +1,7 @@
 NAME	:=	btc
 
 SRC	:=	main.cpp \
+		BitcoinExchange.cpp \
 
 OBJ := $(SRC:.cpp=.o)
 

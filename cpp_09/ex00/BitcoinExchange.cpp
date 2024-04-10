@@ -12,17 +12,6 @@ BitcoinExchange::~BitcoinExchange()
 	this->_FdInput.close();
 }
 
-int BitcoinExchange::PosPipe(std::string input)
-{
-	int index;
-
-	for (index = 0; input[index]; index++)
-	{
-		if (input[index] == '|')
-			return (index);
-	}
-	return (-1);
-}
 
 void BitcoinExchange::OpenDatabase()
 {
@@ -60,6 +49,18 @@ void BitcoinExchange::CheckInputLine(std::string input)
 		throw (BadInputLineException());
 }
 
+int BitcoinExchange::PosPipe(std::string input)
+{
+	int index;
+
+	for (index = 0; input[index]; index++)
+	{
+		if (input[index] == '|')
+			return (index);
+	}
+	return (-1);
+}
+
 void BitcoinExchange::OverflowCheck(std::string input)
 {
     const char max[] = "2147483647";
@@ -86,16 +87,12 @@ std::string BitcoinExchange::GetSpicificDate(int index, std::string input)
 		beginindex = 0;
 	else
 	{
-		beginindex = index;
-		while (input[index] != '-' || input[index] != ' ')
-			index++;
+		beginindex = index - 1;
+		while (input[beginindex] != '-')
+			beginindex--;
+		beginindex += 1;
 	}
-	return (input.substr(beginindex, index));
-}
-
-void BitcoinExchange::PrintErrorDate(std::string input)
-{
-	std::cout << "Error: bad date => " << input << std::endl;
+	return (input.substr(beginindex, index - beginindex));
 }
 
 void BitcoinExchange::CheckDate(std::string input)
@@ -106,32 +103,24 @@ void BitcoinExchange::CheckDate(std::string input)
 
 	for (int index = 0; input[index]; index++)
 	{
-		if (input[index] == '-')
+		if (input[index] == '-' || input[index + 1] == '\0')
 		{
-			countseperator += 1;
+			if (input[index + 1] == '\0')
+				index += 1;
 			if (countseperator > 2)
-			{
-				this->PrintErrorDate(input);
-				throw (EmptyException());
-			}
+				throw (EmptyException(input));
 			singledate = this->GetSpicificDate(index, input);
 			this->OverflowCheck(singledate);
 			datevalue = std::stof(singledate);
 			if (countseperator == 0 && ((datevalue < 2009 || datevalue > 2022)))
-			{
-				this->PrintErrorDate(input);
-				throw (EmptyException());				
-			}
+				throw (EmptyException(input));				
 			else if (countseperator == 1 && (datevalue < 1 || datevalue > 12))
-			{
-				this->PrintErrorDate(input);
-				throw (EmptyException());					
-			}
+				throw (EmptyException(input));					
 			else if (countseperator == 2 && (datevalue < 1 || datevalue > 31))
-			{
-				this->PrintErrorDate(input);
-				throw (EmptyException());					
-			}
+				throw (EmptyException(input));		
+			countseperator += 1;
+			if (input[index] == '\0')
+				break ;
 		}
 	}
 }
@@ -161,11 +150,11 @@ void BitcoinExchange::ConvertionData(char *arg)
 		try
 		{
 			this->CheckInputLine(LineFile);
-			//int PipeIndex = this->PosPipe(LineFile);
-			//DateType = LineFile.substr(0, PipeIndex - 1);
-			//this->CheckDate(DateType);
-			//ValueType = LineFile.substr(PipeIndex + 2, this->EndLine<std::string>(LineFile));
-			//this->CheckValue(ValueType);
+			int PipeIndex = this->PosPipe(LineFile);
+			DateType = LineFile.substr(0, PipeIndex - 1);
+			this->CheckDate(DateType);
+			ValueType = LineFile.substr(PipeIndex + 2, this->EndLine<std::string>(LineFile));
+			this->CheckValue(ValueType);
 			std::cout << "yay" << std::endl;
 			//this->CalculateValueFromData(DateType, ValueType);
 		}
@@ -176,9 +165,14 @@ void BitcoinExchange::ConvertionData(char *arg)
 	}
 }
 
+BitcoinExchange::EmptyException::EmptyException(const std::string &input)
+{
+	this->errorStr = "Error: bad date => " + input;
+}
+
 const char* BitcoinExchange::EmptyException::what() const throw()
 {
-	return ("");
+	return (this->errorStr.c_str());
 }
 
 const char* BitcoinExchange::BadValueTooLowException::what() const throw()
@@ -205,3 +199,8 @@ const char* BitcoinExchange::InfileFirstLineexception::what() const throw()
 {
 	return ("ERROR: The first line of the file needs to start with: 'date | value'. Date being the date of the current bitcoin value!");
 }
+
+
+// map container is godly for dit
+
+/////map lower_bound() container ft

@@ -12,8 +12,6 @@ public:
 	{
 		std::cout << "MutantStack default constructor is called!" << std::endl;
 	};
-	//MutantStack(MutantStack &in);
-	//MutantStack& operator=(MutantStack &in);
 	~MutantStack() 
 	{
 		std::cout << "MutantStack default deconstructor is called!" << std::endl;
@@ -30,6 +28,5 @@ public:
 	{
 		return (this->c.end());
 	}
-
 
 };

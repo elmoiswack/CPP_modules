@@ -48,40 +48,45 @@ void Span::addNumber(int numb)
 	this->_last += 1;
 }
 
-int	Span::shortestSpan()
+unsigned int	Span::shortestSpan()
 {
 	if (this->_last == 0 || this->_last == 1)
 		throw (NoSpanFoundException());
 
-	int	shortSpan = 2147483646;
-	int	begin_int;
+	int	shortSpan = 2147483647;
 	std::multiset<int>::iterator begin = this->_arr.begin();
-	std::multiset<int>::iterator end;
+	std::multiset<int>::iterator end = this->_arr.begin();
+	end++;
 
-	begin_int = *begin;
-	for (end = this->_arr.begin(); end != this->_arr.end(); end++)
+	for (; end != this->_arr.end(); end++)
 	{
-		if (end == begin)
-			end++;
-		if ((*end - begin_int) < shortSpan)
-			shortSpan = *end - begin_int;
+		if ((*end - *begin) < shortSpan)
+			shortSpan = *end - *begin;
+		begin++;
 	}
-	return (shortSpan);
+	return (static_cast<unsigned int>(shortSpan));
 }
 
-int Span::longestSpan()
+unsigned int Span::longestSpan()
 {
 	if (this->_last == 0 || this->_last == 1)
 		throw (NoSpanFoundException());
 
-	int	longSpan = 0;
+	int	longSpan ;
 	std::multiset<int>::iterator begin = this->_arr.begin();
-	std::multiset<int>::iterator endd;
+	std::multiset<int>::iterator endd = this->_arr.end();
 
-	for (endd = this->_arr.begin(); endd != this->_arr.end(); endd++)
+	endd--;
+	longSpan = *endd - *begin;
+	return (static_cast<unsigned int>(longSpan));
+}
+
+void Span::FillContainer()
+{
+	srand(time(NULL));
+	for (unsigned int i = this->_last; i < (this->_size); i++)
 	{
-		if ((*endd - *begin) > longSpan)
-			longSpan = *endd - *begin;
-	}
-	return (longSpan);
+		int numb = rand();
+		this->addNumber(numb);
+	}		
 }

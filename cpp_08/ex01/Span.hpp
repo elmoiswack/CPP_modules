@@ -19,8 +19,9 @@ public:
 	~Span();
 
 	void addNumber(int numb);
-	int	shortestSpan();
-	int	longestSpan();
+	unsigned int	shortestSpan();
+	unsigned int	longestSpan();
+	void FillContainer();
 
 	class TooManyNumbException : public std::exception
 	{

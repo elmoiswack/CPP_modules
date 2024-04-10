@@ -36,7 +36,13 @@ public:
 
 	class EmptyException : public std::exception
 	{
+		public:
+
+		EmptyException(const std::string &input);
 		const char* what() const throw();
+
+		private:
+		std::string errorStr;
 	};
 
 	class BadValueTooLowException : public std::exception

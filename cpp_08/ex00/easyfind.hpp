@@ -6,10 +6,7 @@
 
 class IntNotFoundException : public std::exception
 {
-	const char *what() const throw()
-	{
-		return ("The interger value you are trying to find in the container isn't inside the container!!");
-	}
+	const char *what() const throw();
 };
 
 

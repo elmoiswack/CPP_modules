@@ -1,36 +1,5 @@
 #include "Span.hpp"
 
-// int main(void)
-// {
-// 	Span sp(100000);
-
-// 	srand(time(NULL));
-// 	try
-// 	{
-// 		for (int i = 0; i < 100000; i++)
-// 		{
-// 			sp.addNumber(rand());
-// 		}		
-// 	}
-// 	catch(const std::exception& e)
-// 	{
-// 		std::cerr << e.what() << '\n';
-// 	}
-
-// 	try
-// 	{
-		
-// 		std::cout << sp.shortestSpan() << std::endl;
-// 		std::cout << sp.longestSpan() << std::endl;
-	
-// 	}
-// 	catch(const std::exception& e)
-// 	{
-// 		std::cerr << e.what() << '\n';
-// 	}
-	
-// }
-
 int main()
 {
 	Span sp(5);
@@ -39,15 +8,14 @@ int main()
 	{
 		sp.addNumber(1);
 		sp.addNumber(3);
-		sp.addNumber(17);
-		sp.addNumber(9);
+		sp.addNumber(4);
+		sp.addNumber(-7);
 		sp.addNumber(11);
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
 	try
 	{
 		std::cout << sp.shortestSpan() << std::endl;
@@ -57,6 +25,7 @@ int main()
 	{
 		std::cerr << e.what() << '\n';
 	}
+	
 	std::cout << std::endl;
 	Span copy(sp);
 	std::cout << std::endl;
@@ -73,7 +42,21 @@ int main()
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
+
+	std::cout << std::endl;	
+	Span large(100000);
+	std::cout << std::endl;
+	try
+	{
+		large.FillContainer();
+		std::cout << large.shortestSpan() << std::endl;
+		std::cout << large.longestSpan() << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+
 	std::cout << std::endl;
 	Span empty(3);
 	std::cout << std::endl;
@@ -97,7 +80,6 @@ int main()
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
 	
 	return 0;
 }

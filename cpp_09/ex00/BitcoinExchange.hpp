@@ -8,14 +8,15 @@
 class BitcoinExchange
 {
 private:
-	std::ifstream _database;
-	std::ifstream _FdInput;
+
 public:
 	BitcoinExchange();
+	BitcoinExchange(BitcoinExchange &in);
+	BitcoinExchange& operator=(BitcoinExchange &in);
 	~BitcoinExchange();
 
-	void OpenDatabase();
-	std::map<long, double> PutFileIntoContainer(std::map<long, double> container);
+	void OpenDatabase(std::ifstream& database, std::ifstream& Fdinput);
+	std::map<long, double> PutFileIntoContainer(std::map<long, double> container, std::ifstream& database);
 	void CheckDataLine(std::string input);
 
 	void ConvertionData(char *inputFile);
@@ -29,7 +30,7 @@ public:
 	int PosPipe(std::string input);
 	void OverflowCheck(std::string input);
 
-	void CloseFiles();
+	void CloseFiles(std::ifstream& database, std::ifstream& Fdinput);
 
 	template <typename T> int EndLine(T input)
 	{

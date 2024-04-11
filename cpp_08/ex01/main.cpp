@@ -9,8 +9,9 @@ int main()
 		sp.addNumber(1);
 		sp.addNumber(3);
 		sp.addNumber(4);
-		sp.addNumber(-7);
-		sp.addNumber(11);
+		sp.addNumber(INT32_MAX);
+		sp.addNumber(INT32_MIN);
+
 	}
 	catch(const std::exception& e)
 	{

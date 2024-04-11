@@ -53,18 +53,18 @@ unsigned int	Span::shortestSpan()
 	if (this->_last == 0 || this->_last == 1)
 		throw (NoSpanFoundException());
 
-	int	shortSpan = 2147483647;
+	unsigned int	shortSpan = UINT32_MAX;
 	std::multiset<int>::iterator begin = this->_arr.begin();
 	std::multiset<int>::iterator end = this->_arr.begin();
 	end++;
 
 	for (; end != this->_arr.end(); end++)
 	{
-		if ((*end - *begin) < shortSpan)
+		if ((unsigned int)(*end - *begin) < shortSpan)
 			shortSpan = *end - *begin;
 		begin++;
 	}
-	return (static_cast<unsigned int>(shortSpan));
+	return (shortSpan);
 }
 
 unsigned int Span::longestSpan()
@@ -72,13 +72,13 @@ unsigned int Span::longestSpan()
 	if (this->_last == 0 || this->_last == 1)
 		throw (NoSpanFoundException());
 
-	int	longSpan ;
+	unsigned int	longSpan ;
 	std::multiset<int>::iterator begin = this->_arr.begin();
 	std::multiset<int>::iterator endd = this->_arr.end();
 
 	endd--;
 	longSpan = *endd - *begin;
-	return (static_cast<unsigned int>(longSpan));
+	return (longSpan);
 }
 
 void Span::FillContainer()
@@ -89,4 +89,14 @@ void Span::FillContainer()
 		int numb = rand();
 		this->addNumber(numb);
 	}		
+}
+
+const char *Span::NoSpanFoundException::what() const throw()
+{
+	return ("No span found, either because there is only 1 number in the array or non at all!\nCall addNumber() first!");
+}
+
+const char *Span::TooManyNumbException::what() const throw()
+{
+	return ("The maximum numbers have already been added, the number you just passed won't be included in the array!");
 }

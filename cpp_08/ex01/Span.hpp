@@ -4,6 +4,7 @@
 #include <vector>
 #include <iterator>
 #include <set>
+#include <limits>
 
 class Span
 {
@@ -25,17 +26,11 @@ public:
 
 	class TooManyNumbException : public std::exception
 	{
-		const char *what() const throw()
-		{
-			return ("The maximum numbers have already been added, the number you just passed won't be included in the array!");
-		}
+		const char *what() const throw();
 	};
 
 	class NoSpanFoundException : public std::exception
 	{
-		const char *what() const throw()
-		{
-			return ("No span found, either because there is only 1 number in the array or non at all!\nCall addNumber() first!");
-		}
+		const char *what() const throw();
 	};
 };

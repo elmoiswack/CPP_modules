@@ -8,16 +8,28 @@ BitcoinExchange::BitcoinExchange()
 BitcoinExchange::~BitcoinExchange()
 {
 	std::cout << "Default deconstructor is called!" << std::endl;
-	this->CloseFiles();
 }
 
-
-void BitcoinExchange::OpenDatabase()
+BitcoinExchange::BitcoinExchange(BitcoinExchange& in)
 {
-	this->_database.open("./data.csv", std::ifstream::in);
-	if (this->_database.fail())
+	std::cout << "Copy constructor is called!" << std::endl;
+	*this = in;
+}
+
+BitcoinExchange& BitcoinExchange::operator=(BitcoinExchange& in)
+{
+	std::cout << "Operator overload '=' is called!" << std::endl;
+	if (this == &in)
+		return (*this);
+	return(*this);
+}
+
+void BitcoinExchange::OpenDatabase(std::ifstream& database, std::ifstream& Fdinput)
+{
+	database.open("./data.csv", std::ifstream::in);
+	if (database.fail())
 	{
-		this->CloseFiles();
+		this->CloseFiles(database, Fdinput);
 		throw(FileOpenFailedException());
 	}
 }
@@ -146,7 +158,7 @@ void BitcoinExchange::CheckDataLine(std::string input)
 		throw(DatabaseInvalidLineexception());
 }
 
-std::map<long, double> BitcoinExchange::PutFileIntoContainer(std::map<long, double> container)
+std::map<long, double> BitcoinExchange::PutFileIntoContainer(std::map<long, double> container, std::ifstream& database)
 {
 	long Date;
 	double Value;
@@ -154,10 +166,10 @@ std::map<long, double> BitcoinExchange::PutFileIntoContainer(std::map<long, doub
 	std::string Datestring;
 	std::string Valuestring;
 
-	std::getline(this->_database, FileLine);
+	std::getline(database, FileLine);
 	if (FileLine != "date,exchange_rate")
 		throw(DatabaseFirstLineexception());
-	while(std::getline(this->_database, FileLine))
+	while(std::getline(database, FileLine))
 	{
 		this->CheckDataLine(FileLine);
 		Datestring = FileLine.substr(0, 10);
@@ -207,18 +219,21 @@ void BitcoinExchange::ConvertionData(char *arg)
 	std::string ValueType;
 	std::map<long, double> container;
 
-	this->_FdInput.open(arg, std::ifstream::in);
-	if (this->_FdInput.fail())
+	std::ifstream database;
+	std::ifstream Fdinput;
+
+	Fdinput.open(arg, std::ifstream::in);
+	if (Fdinput.fail())
 		throw (FileOpenFailedException());
-	this->OpenDatabase();
-	container = this->PutFileIntoContainer(container);
-	std::getline(this->_FdInput, LineFile);
+	this->OpenDatabase(database, Fdinput);
+	container = this->PutFileIntoContainer(container, database);
+	std::getline(Fdinput, LineFile);
 	if (LineFile != "date | value")
 	{
-		this->CloseFiles();
+		this->CloseFiles(database, Fdinput);
 		throw (InfileFirstLineexception());
 	}
-	while (std::getline(this->_FdInput, LineFile))
+	while (std::getline(Fdinput, LineFile))
 	{
 		try
 		{
@@ -235,15 +250,15 @@ void BitcoinExchange::ConvertionData(char *arg)
 			std::cout << e.what() << std::endl;
 		}
 	}
-	this->CloseFiles();
+	this->CloseFiles(database, Fdinput);
 }
 
-void BitcoinExchange::CloseFiles()
+void BitcoinExchange::CloseFiles(std::ifstream& database, std::ifstream& Fdinput)
 {
-	if (this->_database.is_open())
-		this->_database.close();
-	if (this->_database.is_open())
-		this->_FdInput.close();
+	if (database.is_open())
+		database.close();
+	if (database.is_open())
+		Fdinput.close();
 }
 
 BitcoinExchange::DateException::DateException(const std::string &input)

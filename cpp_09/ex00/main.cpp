@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
 	}
 	try
 	{
-		BitcoinExchange main;
-		main.ConvertionData(argv[1]);
+		BitcoinExchange prog;
+		prog.ConvertionData(argv[1]);
 	}
 	catch(const std::exception& e)
 	{

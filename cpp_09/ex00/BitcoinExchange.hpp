@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <map>
+#include <iterator>
 
 class BitcoinExchange
 {
@@ -13,19 +15,21 @@ public:
 	~BitcoinExchange();
 
 	void OpenDatabase();
+	std::map<long, double> PutFileIntoContainer(std::map<long, double> container);
+	void CheckDataLine(std::string input);
 
 	void ConvertionData(char *inputFile);
 	void CheckInputLine(std::string input);
 	void CheckDate(std::string input);
 	void CheckValue(std::string input);
-	void CalculateValueFromData(std::string date, std::string value);
+	void CalculateValueFromData(std::string date, std::string value, std::map<long, double> container);
 	
 	std::string GetSpicificDate(int index, std::string input);
 
 	int PosPipe(std::string input);
 	void OverflowCheck(std::string input);
-	
-	void PrintErrorDate(std::string input);
+
+	void CloseFiles();
 
 	template <typename T> int EndLine(T input)
 	{
@@ -34,13 +38,11 @@ public:
 		return (index);
 	}
 
-	class EmptyException : public std::exception
+	class DateException : public std::exception
 	{
 		public:
-
-		EmptyException(const std::string &input);
-		const char* what() const throw();
-
+			DateException(const std::string &input);
+			const char* what() const throw();
 		private:
 		std::string errorStr;
 	};
@@ -66,6 +68,16 @@ public:
 	};
 
 	class InfileFirstLineexception : public std::exception
+	{
+		const char* what() const throw();
+	};
+
+	class DatabaseFirstLineexception : public std::exception
+	{
+		const char* what() const throw();
+	};
+
+	class DatabaseInvalidLineexception : public std::exception
 	{
 		const char* what() const throw();
 	};

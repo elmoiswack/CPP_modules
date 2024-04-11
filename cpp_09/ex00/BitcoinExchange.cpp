@@ -8,8 +8,7 @@ BitcoinExchange::BitcoinExchange()
 BitcoinExchange::~BitcoinExchange()
 {
 	std::cout << "Default deconstructor is called!" << std::endl;
-	this->_database.close();
-	this->_FdInput.close();
+	this->CloseFiles();
 }
 
 
@@ -17,7 +16,10 @@ void BitcoinExchange::OpenDatabase()
 {
 	this->_database.open("./data.csv", std::ifstream::in);
 	if (this->_database.fail())
+	{
+		this->CloseFiles();
 		throw(FileOpenFailedException());
+	}
 }
 
 void BitcoinExchange::CheckInputLine(std::string input)
@@ -108,16 +110,16 @@ void BitcoinExchange::CheckDate(std::string input)
 			if (input[index + 1] == '\0')
 				index += 1;
 			if (countseperator > 2)
-				throw (EmptyException(input));
+				throw (DateException(input));
 			singledate = this->GetSpicificDate(index, input);
 			this->OverflowCheck(singledate);
 			datevalue = std::stof(singledate);
 			if (countseperator == 0 && ((datevalue < 2009 || datevalue > 2022)))
-				throw (EmptyException(input));				
+				throw (DateException(input));				
 			else if (countseperator == 1 && (datevalue < 1 || datevalue > 12))
-				throw (EmptyException(input));					
+				throw (DateException(input));					
 			else if (countseperator == 2 && (datevalue < 1 || datevalue > 31))
-				throw (EmptyException(input));		
+				throw (DateException(input));		
 			countseperator += 1;
 			if (input[index] == '\0')
 				break ;
@@ -132,19 +134,90 @@ void BitcoinExchange::CheckValue(std::string input)
 	this->OverflowCheck(input);
 }
 
+void BitcoinExchange::CheckDataLine(std::string input)
+{
+	if (input.size() <= 10)
+		throw(DatabaseInvalidLineexception());
+	if (input[4] != '-')
+		throw(DatabaseInvalidLineexception());
+	if (input[7] != '-')
+		throw(DatabaseInvalidLineexception());
+	if (input[10] != ',')
+		throw(DatabaseInvalidLineexception());
+}
+
+std::map<long, double> BitcoinExchange::PutFileIntoContainer(std::map<long, double> container)
+{
+	long Date;
+	double Value;
+	std::string FileLine;
+	std::string Datestring;
+	std::string Valuestring;
+
+	std::getline(this->_database, FileLine);
+	if (FileLine != "date,exchange_rate")
+		throw(DatabaseFirstLineexception());
+	while(std::getline(this->_database, FileLine))
+	{
+		this->CheckDataLine(FileLine);
+		Datestring = FileLine.substr(0, 10);
+		Valuestring = FileLine.substr(11, this->EndLine<std::string>(FileLine));
+		Datestring.erase(4, 1);
+		Datestring.erase(6, 1);
+		Date = std::stol(Datestring);
+		Value = std::stod(Valuestring);
+		container[Date] = Value;
+	}
+	return (container);
+}
+
+void BitcoinExchange::CalculateValueFromData(std::string DateType, std::string ValueType, std::map<long, double> container)
+{
+	std::string Datestr(DateType);
+	Datestr.erase(4, 1);
+	Datestr.erase(6, 1);
+
+	long Date = std::stol(Datestr);
+	double Value = std::stod(ValueType);
+	
+	double ContainerValue;
+
+	std::map<long, double>::iterator it;
+	it = container.begin();
+	
+	while (it != container.end() && (*it).first != Date)
+		it++;
+	if (it != container.end())
+	{
+		ContainerValue = (*it).second * Value;
+		std::cout << DateType << " => " << ValueType << " = " << ContainerValue << std::endl;
+	}
+	else
+	{
+		auto it = container.lower_bound(Date);
+		ContainerValue = (*it).second * Value;
+		std::cout << DateType << " => " << ValueType << " = " << ContainerValue << std::endl;
+	}
+}
+
 void BitcoinExchange::ConvertionData(char *arg)
 {
 	std::string LineFile;
 	std::string DateType;
 	std::string ValueType;
+	std::map<long, double> container;
 
 	this->_FdInput.open(arg, std::ifstream::in);
 	if (this->_FdInput.fail())
 		throw (FileOpenFailedException());
 	this->OpenDatabase();
+	container = this->PutFileIntoContainer(container);
 	std::getline(this->_FdInput, LineFile);
 	if (LineFile != "date | value")
+	{
+		this->CloseFiles();
 		throw (InfileFirstLineexception());
+	}
 	while (std::getline(this->_FdInput, LineFile))
 	{
 		try
@@ -155,44 +228,52 @@ void BitcoinExchange::ConvertionData(char *arg)
 			this->CheckDate(DateType);
 			ValueType = LineFile.substr(PipeIndex + 2, this->EndLine<std::string>(LineFile));
 			this->CheckValue(ValueType);
-			std::cout << "yay" << std::endl;
-			//this->CalculateValueFromData(DateType, ValueType);
+			this->CalculateValueFromData(DateType, ValueType, container);
 		}
 		catch(const std::exception& e)
 		{
 			std::cout << e.what() << std::endl;
 		}
 	}
+	this->CloseFiles();
 }
 
-BitcoinExchange::EmptyException::EmptyException(const std::string &input)
+void BitcoinExchange::CloseFiles()
+{
+	if (this->_database.is_open())
+		this->_database.close();
+	if (this->_database.is_open())
+		this->_FdInput.close();
+}
+
+BitcoinExchange::DateException::DateException(const std::string &input)
 {
 	this->errorStr = "Error: bad date => " + input;
 }
 
-const char* BitcoinExchange::EmptyException::what() const throw()
+const char* BitcoinExchange::DateException::what() const throw()
 {
 	return (this->errorStr.c_str());
 }
 
 const char* BitcoinExchange::BadValueTooLowException::what() const throw()
 {
-	return ("ERROR: not a positive number");
+	return ("ERROR: not a positive number!");
 }
 
 const char* BitcoinExchange::BadValueTooHighException::what() const throw()
 {
-	return ("ERROR: number too large");
+	return ("ERROR: number too large!");
 }
 
 const char* BitcoinExchange::BadInputLineException::what() const throw()
 {
-	return ("ERROR: current line is invalid. Expected: 'a date | a value'");
+	return ("ERROR: current line is invalid. Expected: 'a date | a value'!");
 }
 
 const char* BitcoinExchange::FileOpenFailedException::what() const throw()
 {
-	return ("ERROR: Failed to open the current file!");
+	return ("ERROR: Failed to open file!");
 }
 
 const char* BitcoinExchange::InfileFirstLineexception::what() const throw()
@@ -200,7 +281,12 @@ const char* BitcoinExchange::InfileFirstLineexception::what() const throw()
 	return ("ERROR: The first line of the file needs to start with: 'date | value'. Date being the date of the current bitcoin value!");
 }
 
+const char* BitcoinExchange::DatabaseFirstLineexception::what() const throw()
+{
+	return ("ERROR: The first line of the database needs to start with 'date,exchange_rate'!");
+}
 
-// map container is godly for dit
-
-/////map lower_bound() container ft
+const char* BitcoinExchange::DatabaseInvalidLineexception::what() const throw()
+{
+	return ("ERROR: lines of the database should look like this: 'xxxx-xx-xx,xx'!\nEverything before the comma is the date and after the value, for example: '2022-01-12,24'!");
+}

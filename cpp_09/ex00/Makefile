@@ -7,7 +7,7 @@ OBJ := $(SRC:.cpp=.o)
 
 CC	:=	c++ -g -fsanitize=address
 
-CFLAGS	:= -Wall -Wextra -Werror -std=c++11
+CFLAGS	:= -Wall -Wextra -std=c++11
 
 all: $(NAME)
 

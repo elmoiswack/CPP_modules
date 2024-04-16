@@ -15,13 +15,18 @@ public:
 
 	bool IsPlusMinDeviMulti(char c);
 
-	void MultipleOperation(std::queue<int>& container, std::string input, int index);
+	int MultipleOperation(std::queue<int>& container, std::string input, int index);
 	void SingleOperation(std::queue<int>& container, char which);
 	void CalculateNumb(char *input);
 	void InputParser(std::string input);
 
 
 	class InvalidCharInStrException : public std::exception
+	{
+		const char *what() const throw();
+	};
+
+	class InvalidStrException : public std::exception
 	{
 		const char *what() const throw();
 	};

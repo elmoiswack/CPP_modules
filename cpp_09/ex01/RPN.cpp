@@ -40,6 +40,8 @@ bool RPN::IsPlusMinDeviMulti(char c)
 void RPN::InputParser(std::string input)
 {
 	int index;
+	int numb_count = 0;
+	int operator_count = 0;
 
 	for (index = 0; input[index]; index++)
 	{
@@ -52,44 +54,65 @@ void RPN::InputParser(std::string input)
 		}
 		if (this->IsPlusMinDeviMulti(input[index]) == false && input[index + 1] == '\0')
 			throw (InvalidEndStringException());
+		if (std::isdigit(input[index]) != 0)
+			numb_count += 1;
+		if (this->IsPlusMinDeviMulti(input[index]) == true)
+			operator_count += 1;
 	}
+	if ((numb_count - 1) != operator_count)
+		throw (InvalidStrException());
 }
 
 void RPN::SingleOperation(std::queue<int>& container, char which)
 {
+	int temp = container.front();
+	container.pop();
 	if (which == '+')
 	{
-		unsigned int result = container.front() + container.back();
-		container.pop();
+		unsigned int result = temp + container.front();
 		container.pop();
 		container.push(result);
 	}
 	else if (which == '-')
 	{
-		unsigned int result = container.front() - container.back();
-		container.pop();
+		unsigned int result = temp - container.front();
 		container.pop();
 		container.push(result);
 	}
 	else if (which == '/')
 	{
-		unsigned int result = container.front() / container.back();
-		container.pop();
+		unsigned int result = temp / container.front();
 		container.pop();
 		container.push(result);
 	}
 	else if (which == '*')
 	{ 
-		unsigned int result = container.front() * container.back();
-		container.pop();
+		unsigned int result = temp * container.front();
 		container.pop();
 		container.push(result);
 	}
 }
 
-void RPN::MultipleOperation(std::queue<int>& container, std::string input, int index)
+int RPN::MultipleOperation(std::queue<int>& container, std::string input, int index)
 {
+	unsigned int result;
 
+	result = container.front();
+	container.pop();
+
+	while (container.size() > 1)
+	{
+		SingleOperation(container, input[index]);
+		if (((index + 2) < (int)input.size()) && (this->IsPlusMinDeviMulti(input[index + 2]) == true))
+		{
+			index += 2;
+		}
+		else
+			break ;
+	}
+	container.push(result);
+	SingleOperation(container, input[index]);
+	return (index);
 }
 
 void RPN::CalculateNumb(char *input)
@@ -107,17 +130,23 @@ void RPN::CalculateNumb(char *input)
 		if (this->IsPlusMinDeviMulti(InputStr[index]) == true)
 		{
 			if (((index + 2) < (int)InputStr.size()) && (this->IsPlusMinDeviMulti(InputStr[index + 2]) == true))
-				this->MultipleOperation(container, InputStr, index);
+				index = this->MultipleOperation(container, InputStr, index);
 			else
 				this->SingleOperation(container, InputStr[index]);
 		}
 	}
 	std::cout << container.front() << std::endl;
+	container.pop();
 }
 
 const char* RPN::InvalidEndStringException::what() const throw()
 {
 	return ("ERROR: the input str must end with an '+ - / *'!");
+}
+
+const char* RPN::InvalidStrException::what() const throw()
+{
+	return ("ERROR: invalid input!");
 }
 
 const char* RPN::InvalidCharInStrException::what() const throw()

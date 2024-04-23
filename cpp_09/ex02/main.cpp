@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	{
 		PmergeMe prog;
 		prog.ParseNumbers(argv);
-		prog.Merge();
+		prog.StartSort();
 	}
 	catch(const std::exception& e)
 	{

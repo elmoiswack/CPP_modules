@@ -10,8 +10,7 @@ class PmergeMe
 private:
 	std::vector<int> _vecarr;
 	std::deque<int> _deqarr;
-	unsigned int _vectime;
-	unsigned int _deqtime;
+	unsigned int _elements;
 public:
 	PmergeMe();
 	PmergeMe(PmergeMe &in);
@@ -19,11 +18,21 @@ public:
 	~PmergeMe();
 
 	void ParseNumbers(char *arr[]);
-	template <typename T> void AddNumber(T container, char *argv[]);
+	void AddNumberToBoth(char *numb);
+	void CheckDoubles(std::vector<int> container);
+	
+	void StartSort();
+	template <typename T> void MergeInsertion(T container);
 
-	void Merge();
+	template <typename T> void PrintContainer(T container);
+	void PrintTime(double time, bool is_vec);
 
 	class InvalidNumbersException : public std::exception
+	{
+		const char* what() const throw();
+	};
+
+	class DoubleNumbersException : public std::exception
 	{
 		const char* what() const throw();
 	};

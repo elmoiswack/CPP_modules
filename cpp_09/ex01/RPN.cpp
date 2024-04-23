@@ -104,9 +104,7 @@ int RPN::MultipleOperation(std::queue<int>& container, std::string input, int in
 	{
 		SingleOperation(container, input[index]);
 		if (((index + 2) < (int)input.size()) && (this->IsPlusMinDeviMulti(input[index + 2]) == true))
-		{
 			index += 2;
-		}
 		else
 			break ;
 	}

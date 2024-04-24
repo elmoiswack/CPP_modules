@@ -23,7 +23,7 @@ PmergeMe& PmergeMe::operator=(PmergeMe &in)
 		std::vector<int>::iterator init = in._vecarr.begin();
 		for (; init != in._vecarr.end(); init++)
 		{
-			this->_vecarr.insert(init, *init);
+			this->_vecarr.push_back(*init);
 		}
 	}
 	if (in._deqarr.size() > 0)
@@ -31,7 +31,7 @@ PmergeMe& PmergeMe::operator=(PmergeMe &in)
 		std::deque<int>::iterator initdeq = in._deqarr.begin();
 		for (; initdeq != in._deqarr.end(); initdeq++)
 		{
-			this->_deqarr.insert(initdeq, *initdeq);
+			this->_deqarr.push_back(*initdeq);
 		}
 	}
 	return (*this);
@@ -45,28 +45,18 @@ PmergeMe::~PmergeMe()
 void PmergeMe::AddNumberToBoth(char *numb)
 {
 	int number;
-
-	number = std::stoi(numb);
+	try
+	{
+		number = std::stoi(numb);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		exit(EXIT_FAILURE);
+	}
 	this->_vecarr.push_back(number);
 	this->_deqarr.push_back(number);
 	this->_elements += 1;
-}
-
-template <typename T>
-void PmergeMe::PrintContainer(T container)
-{
-	int count = 0;
-	for (auto it = container.begin(); it != container.end(); it++)
-	{
-		if (count == 5)
-		{
-			std::cout << "[...]" << std::endl;
-			break ;
-		}
-		std::cout << *it << " ";
-		count++;
-	}
-	std::cout << std::endl;
 }
 
 void PmergeMe::CheckDoubles(std::vector<int> container)
@@ -91,7 +81,6 @@ void PmergeMe::ParseNumbers(char *argv[])
 			throw (InvalidNumbersException());
 		for (int j = 0; argv[i][j]; j++)
 		{
-			std::cout << argv[i][j] << std::endl;
 			if (std::isdigit(argv[i][j]) == 0)
 				throw (InvalidNumbersException());
 		}
@@ -103,33 +92,97 @@ void PmergeMe::ParseNumbers(char *argv[])
 }
 
 template <typename T>
-void PmergeMe::MergeInsertion(T container)
+T PmergeMe::merge(T &left, T &right){
+	T	result;
+	int indexl = 0;
+	int indexr = 0;
+
+	while (indexl < (int)left.size() && indexr < (int)right.size())
+	{
+		if (left[indexl] < right[indexr])
+		{
+			result.push_back(left[indexl]);
+			indexl++;
+		}
+		else 
+		{
+			result.push_back(right[indexr]);
+			indexr++;
+		}
+	}
+	while (indexl < (int)left.size())
+	{
+		result.push_back(left[indexl]);
+		indexl++;
+	}
+	while (indexr < (int)right.size())
+	{
+		result.push_back(right[indexr]);
+		indexr++;
+	}
+	return result;
+}
+
+template <typename T>
+T PmergeMe::MergeSort(T& container)
 {
-	T firstcontainer;
-	T secondcontainer;
-	
+	if (container.size() < 2)
+		return container;
 
+	T left = T(container.begin(), container.begin() + container.size() / 2);
+	T right = T(container.begin() + container.size() / 2, container.end());
 
+	left = this->MergeSort(left);
+	right = this->MergeSort(right);
+
+	return (merge(left, right));
 }
 
 void PmergeMe::StartSort()
 {
-	time_t start_time;
-	time_t end_time;
-
-	time(&start_time);
-	this->MergeInsertion(this->_vecarr);
-	std::cout << "After: ";
-	this->PrintContainer(this->_vecarr);
-	time(&end_time);
-	this->PrintTime((end_time - start_time), true);
-	time(&start_time);
-	this->MergeInsertion(this->_deqarr);
-	time(&end_time);
-	this->PrintTime((end_time - start_time), false);
+	this->_vecstarttime = std::chrono::high_resolution_clock::now();
+	this->_vecsorted = this->MergeSort(this->_vecarr);
+	this->_vecendtime = std::chrono::high_resolution_clock::now();
+	this->_deqstarttime = std::chrono::high_resolution_clock::now();
+	this->_deqsorted = this->MergeSort(this->_deqarr);
+	this->_deqendtime = std::chrono::high_resolution_clock::now();
+	this->PrintAll();
 }
 
-void PmergeMe::PrintTime(double time, bool is_vec)
+void PmergeMe::PrintAll()
+{
+	std::cout << "--VECTOR CONTAINER--" << std::endl;
+	std::cout << "Before Vector: ";
+	this->PrintContainer(this->_vecarr);
+	std::cout << "After Vector: ";
+	this->PrintContainer(this->_vecsorted);
+	this->PrintTime(, true);
+	std::cout << "--DEQUE CONTAINER--" << std::endl;
+	std::cout << "Before deque: ";
+	this->PrintContainer(this->_deqarr);
+	std::cout << "After deque: ";
+	this->PrintContainer(this->_deqsorted);
+	this->PrintTime(, false);
+}
+
+template <typename T>
+void PmergeMe::PrintContainer(T& container)
+{
+	int count = 0;
+	for (auto it = container.begin(); it != container.end(); it++)
+	{
+		if (count == 5)
+		{
+			std::cout << "[...]" << std::endl;
+			break ;
+		}
+		std::cout << *it << " ";
+		count++;
+	}
+	std::cout << std::endl;
+}
+
+void PmergeMe::PrintTime(std::string time, bool is_vec)
 {
 	std::cout << "Time to process a range of: ";
 	std::cout << this->_elements;
@@ -141,7 +194,7 @@ void PmergeMe::PrintTime(double time, bool is_vec)
 	{
 		std::cout << " elements with std::deque<int>: ";
 	}
-	std::cout << time << std::setprecision(6);
+	std::cout << time;
 	std::cout << " us" << std::endl;
 }
 

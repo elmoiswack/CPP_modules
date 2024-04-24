@@ -8,8 +8,14 @@
 class PmergeMe
 {
 private:
+	std::vector<int> _vecsorted;
 	std::vector<int> _vecarr;
+	std::deque<int> _deqsorted;
 	std::deque<int> _deqarr;
+	std::chrono::steady_clock::time_point _vecendtime;
+	std::chrono::steady_clock::time_point _vecstarttime;
+	std::chrono::steady_clock::time_point _deqendtime;
+	std::chrono::steady_clock::time_point _deqstarttime;
 	unsigned int _elements;
 public:
 	PmergeMe();
@@ -22,10 +28,12 @@ public:
 	void CheckDoubles(std::vector<int> container);
 	
 	void StartSort();
-	template <typename T> void MergeInsertion(T container);
+	template <typename T> T MergeSort(T& container);
+	template <typename T> T merge(T &left, T &right);
 
-	template <typename T> void PrintContainer(T container);
-	void PrintTime(double time, bool is_vec);
+	void PrintAll();
+	template <typename T> void PrintContainer(T& container);
+	void PrintTime(std::string time, bool is_vec);
 
 	class InvalidNumbersException : public std::exception
 	{

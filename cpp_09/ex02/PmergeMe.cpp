@@ -1,5 +1,6 @@
 #include "PmergeMe.hpp"
 #include <iomanip>
+#include <time.h>
 
 PmergeMe::PmergeMe()
 {
@@ -87,8 +88,6 @@ void PmergeMe::ParseNumbers(char *argv[])
 		this->AddNumberToBoth(argv[i]);
 	}
 	this->CheckDoubles(this->_vecarr);
-	std::cout << "Before : ";
-	this->PrintContainer(this->_vecarr);
 }
 
 template <typename T>
@@ -140,29 +139,35 @@ T PmergeMe::MergeSort(T& container)
 
 void PmergeMe::StartSort()
 {
-	this->_vecstarttime = std::chrono::high_resolution_clock::now();
+	time_t start, end;
+	start = clock();
 	this->_vecsorted = this->MergeSort(this->_vecarr);
-	this->_vecendtime = std::chrono::high_resolution_clock::now();
-	this->_deqstarttime = std::chrono::high_resolution_clock::now();
+	end = clock();
+	this->_vectime = ((double)(end - start)) / CLOCKS_PER_SEC;
+	start = clock();
 	this->_deqsorted = this->MergeSort(this->_deqarr);
-	this->_deqendtime = std::chrono::high_resolution_clock::now();
+	end = clock();
+	this->_deqtime = ((double)(end - start)) / CLOCKS_PER_SEC;
 	this->PrintAll();
 }
 
 void PmergeMe::PrintAll()
 {
+	std::cout << std::endl;
 	std::cout << "--VECTOR CONTAINER--" << std::endl;
 	std::cout << "Before Vector: ";
 	this->PrintContainer(this->_vecarr);
 	std::cout << "After Vector: ";
 	this->PrintContainer(this->_vecsorted);
-	this->PrintTime(, true);
+	this->PrintTime(this->_vectime, true);
+	std::cout << std::endl;
 	std::cout << "--DEQUE CONTAINER--" << std::endl;
 	std::cout << "Before deque: ";
 	this->PrintContainer(this->_deqarr);
 	std::cout << "After deque: ";
 	this->PrintContainer(this->_deqsorted);
-	this->PrintTime(, false);
+	this->PrintTime(this->_deqtime, false);
+	std::cout << std::endl;
 }
 
 template <typename T>
@@ -171,7 +176,7 @@ void PmergeMe::PrintContainer(T& container)
 	int count = 0;
 	for (auto it = container.begin(); it != container.end(); it++)
 	{
-		if (count == 5)
+		if (count == 10)
 		{
 			std::cout << "[...]" << std::endl;
 			break ;
@@ -182,7 +187,7 @@ void PmergeMe::PrintContainer(T& container)
 	std::cout << std::endl;
 }
 
-void PmergeMe::PrintTime(std::string time, bool is_vec)
+void PmergeMe::PrintTime(double time, bool is_vec)
 {
 	std::cout << "Time to process a range of: ";
 	std::cout << this->_elements;
@@ -194,8 +199,8 @@ void PmergeMe::PrintTime(std::string time, bool is_vec)
 	{
 		std::cout << " elements with std::deque<int>: ";
 	}
-	std::cout << time;
-	std::cout << " us" << std::endl;
+	std::cout << std::fixed << std::setprecision(6) << time;
+	std::cout << " seconds" << std::endl;
 }
 
 const char* PmergeMe::InvalidNumbersException::what() const throw()

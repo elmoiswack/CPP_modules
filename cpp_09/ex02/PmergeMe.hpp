@@ -12,10 +12,8 @@ private:
 	std::vector<int> _vecarr;
 	std::deque<int> _deqsorted;
 	std::deque<int> _deqarr;
-	std::chrono::steady_clock::time_point _vecendtime;
-	std::chrono::steady_clock::time_point _vecstarttime;
-	std::chrono::steady_clock::time_point _deqendtime;
-	std::chrono::steady_clock::time_point _deqstarttime;
+	double _vectime;
+	double _deqtime;
 	unsigned int _elements;
 public:
 	PmergeMe();
@@ -33,7 +31,7 @@ public:
 
 	void PrintAll();
 	template <typename T> void PrintContainer(T& container);
-	void PrintTime(std::string time, bool is_vec);
+	void PrintTime(double time, bool is_vec);
 
 	class InvalidNumbersException : public std::exception
 	{

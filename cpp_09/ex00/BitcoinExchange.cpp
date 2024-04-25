@@ -141,9 +141,12 @@ void BitcoinExchange::CheckDate(std::string input)
 
 void BitcoinExchange::CheckValue(std::string input)
 {
-	if (input[0] == '-')
-		throw (BadValueTooLowException());
 	this->OverflowCheck(input);
+	double Value = std::stod(input);
+	if (Value < 0)
+		throw (BadValueTooLowException());
+	if (Value > 1000)
+		throw (BadValueTooHighException());
 }
 
 void BitcoinExchange::CheckDataLine(std::string input)

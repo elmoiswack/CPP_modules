@@ -17,6 +17,7 @@ public:
 
 	int MultipleOperation(std::queue<int>& container, std::string input, int index);
 	void SingleOperation(std::queue<int>& container, char which);
+	void SingleOperationLast(std::queue<int>& container, char which);
 	void CalculateNumb(char *input);
 	void InputParser(std::string input);
 

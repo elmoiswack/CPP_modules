@@ -93,6 +93,34 @@ void RPN::SingleOperation(std::queue<int>& container, char which)
 	}
 }
 
+void RPN::SingleOperationLast(std::queue<int>& container, char which)
+{
+	int back = container.back();
+	int front = container.front();
+	container.pop();
+	container.pop();
+	if (which == '+')
+	{
+		unsigned int result = back + front;
+		container.push(result);
+	}
+	else if (which == '-')
+	{
+		unsigned int result = back - front;
+		container.push(result);
+	}
+	else if (which == '/')
+	{
+		unsigned int result = back / front;
+		container.push(result);
+	}
+	else if (which == '*')
+	{ 
+		unsigned int result = back * front;
+		container.push(result);
+	}
+}
+
 int RPN::MultipleOperation(std::queue<int>& container, std::string input, int index)
 {
 	unsigned int result;
@@ -109,7 +137,7 @@ int RPN::MultipleOperation(std::queue<int>& container, std::string input, int in
 			break ;
 	}
 	container.push(result);
-	SingleOperation(container, input[index]);
+	SingleOperationLast(container, input[index]);
 	return (index);
 }
 
@@ -151,3 +179,5 @@ const char* RPN::InvalidCharInStrException::what() const throw()
 {
 	return ("ERROR: there is a character that shouldn't be in the input str!");
 }
+
+//"1 2 * 2 / 2 + 5 * 6 - 1 3 * - 4 5 * * 8 /"

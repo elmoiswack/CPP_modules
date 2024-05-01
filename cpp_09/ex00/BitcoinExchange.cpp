@@ -262,7 +262,7 @@ void BitcoinExchange::CloseFiles(std::ifstream& database, std::ifstream& Fdinput
 {
 	if (database.is_open())
 		database.close();
-	if (database.is_open())
+	if (Fdinput.is_open())
 		Fdinput.close();
 }
 

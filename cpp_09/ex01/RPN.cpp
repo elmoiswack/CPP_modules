@@ -47,11 +47,16 @@ void RPN::InputParser(std::string input)
 	{
 		if ((std::isdigit(input[index]) == 0) && (this->IsPlusMinDeviMulti(input[index]) == false) && (input[index] != ' '))
 			throw (InvalidCharInStrException());	
-		if (input[index] != ' ')
+		if (input[index] == ' ')
 		{
-			if (input[index + 1] != '\0' && input[index + 1] != ' ')
-				throw (InvalidCharInStrException());
+			if (index + 1 < (int)input.size() && input[index + 1] == ' ')
+				throw (InvalidStrException());
 		}
+		// if (input[index] != ' ')
+		// {
+		// 	if (input[index + 1] != '\0' && input[index + 1] != ' ')
+		// 		throw (InvalidCharInStrException());
+		// }
 		if (this->IsPlusMinDeviMulti(input[index]) == false && input[index + 1] == '\0')
 			throw (InvalidEndStringException());
 		if (std::isdigit(input[index]) != 0)
@@ -179,5 +184,3 @@ const char* RPN::InvalidCharInStrException::what() const throw()
 {
 	return ("ERROR: there is a character that shouldn't be in the input str!");
 }
-
-//"1 2 * 2 / 2 + 5 * 6 - 1 3 * - 4 5 * * 8 /"

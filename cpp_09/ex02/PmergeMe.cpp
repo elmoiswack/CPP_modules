@@ -52,6 +52,7 @@ void PmergeMe::AddNumberToBoth(char *numb)
 	}
 	catch(const std::exception& e)
 	{
+		std::cout << "ERROR: invalid number found in string!" << std::endl;
 		std::cerr << e.what() << '\n';
 		exit(EXIT_FAILURE);
 	}

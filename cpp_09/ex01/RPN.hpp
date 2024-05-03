@@ -21,6 +21,10 @@ public:
 	void CalculateNumb(char *input);
 	void InputParser(std::string input);
 
+	class TooManySpacesStringException : public std::exception
+	{
+		const char *what() const throw();
+	};
 
 	class InvalidCharInStrException : public std::exception
 	{

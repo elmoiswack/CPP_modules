@@ -50,13 +50,13 @@ void RPN::InputParser(std::string input)
 		if (input[index] == ' ')
 		{
 			if (index + 1 < (int)input.size() && input[index + 1] == ' ')
-				throw (InvalidStrException());
+				throw (TooManySpacesStringException());
 		}
-		// if (input[index] != ' ')
-		// {
-		// 	if (input[index + 1] != '\0' && input[index + 1] != ' ')
-		// 		throw (InvalidCharInStrException());
-		// }
+		if (input[index] != ' ')
+		{
+			if (input[index + 1] != '\0' && input[index + 1] != ' ')
+				throw (InvalidCharInStrException());
+		}
 		if (this->IsPlusMinDeviMulti(input[index]) == false && input[index + 1] == '\0')
 			throw (InvalidEndStringException());
 		if (std::isdigit(input[index]) != 0)
@@ -168,6 +168,11 @@ void RPN::CalculateNumb(char *input)
 	}
 	std::cout << container.front() << std::endl;
 	container.pop();
+}
+
+const char* RPN::TooManySpacesStringException::what() const throw()
+{
+	return ("ERROR: check if the input str only has 1 space between the numbers and operators!");
 }
 
 const char* RPN::InvalidEndStringException::what() const throw()

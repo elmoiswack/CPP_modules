@@ -143,6 +143,11 @@ void BitcoinExchange::CheckValue(std::string input)
 {
 	if (input[0] == '-')
 		throw (BadValueTooLowException());
+	for (int index = 0; input[index]; index++)
+	{
+		if (std::isdigit(input[index]) == 0 && input[index] != '.')
+			throw (BadValueInvalidException());
+	}
 	this->OverflowCheck(input);
 	double Value = std::stod(input);
 	if (Value < 0)
@@ -252,7 +257,7 @@ void BitcoinExchange::ConvertionData(char *arg)
 		}
 		catch(const std::exception& e)
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << "ERROR:" << e.what() << std::endl;
 		}
 	}
 	this->CloseFiles(database, Fdinput);
@@ -268,7 +273,7 @@ void BitcoinExchange::CloseFiles(std::ifstream& database, std::ifstream& Fdinput
 
 BitcoinExchange::DateException::DateException(const std::string &input)
 {
-	this->errorStr = "Error: bad date => " + input;
+	this->errorStr = "bad date => " + input;
 }
 
 const char* BitcoinExchange::DateException::what() const throw()
@@ -276,37 +281,42 @@ const char* BitcoinExchange::DateException::what() const throw()
 	return (this->errorStr.c_str());
 }
 
+const char* BitcoinExchange::BadValueInvalidException::what() const throw()
+{
+	return ("value passed isn't valid!");
+}
+
 const char* BitcoinExchange::BadValueTooLowException::what() const throw()
 {
-	return ("ERROR: not a positive number!");
+	return ("not a positive number!");
 }
 
 const char* BitcoinExchange::BadValueTooHighException::what() const throw()
 {
-	return ("ERROR: number too large!");
+	return ("number too large!");
 }
 
 const char* BitcoinExchange::BadInputLineException::what() const throw()
 {
-	return ("ERROR: current line is invalid. Expected: 'a date | a value'!");
+	return ("current line is invalid. Expected: 'a date | a value'!");
 }
 
 const char* BitcoinExchange::FileOpenFailedException::what() const throw()
 {
-	return ("ERROR: Failed to open file!");
+	return ("Failed to open file!");
 }
 
 const char* BitcoinExchange::InfileFirstLineexception::what() const throw()
 {
-	return ("ERROR: The first line of the file needs to start with: 'date | value'. Date being the date of the current bitcoin value!");
+	return ("The first line of the file needs to start with: 'date | value'. Date being the date of the current bitcoin value!");
 }
 
 const char* BitcoinExchange::DatabaseFirstLineexception::what() const throw()
 {
-	return ("ERROR: The first line of the database needs to start with 'date,exchange_rate'!");
+	return ("The first line of the database needs to start with 'date,exchange_rate'!");
 }
 
 const char* BitcoinExchange::DatabaseInvalidLineexception::what() const throw()
 {
-	return ("ERROR: lines of the database should look like this: 'xxxx-xx-xx,xx'!\nEverything before the comma is the date and after the value, for example: '2022-01-12,24'!");
+	return ("lines of the database should look like this: 'xxxx-xx-xx,xx'!\nEverything before the comma is the date and after the value, for example: '2022-01-12,24'!");
 }

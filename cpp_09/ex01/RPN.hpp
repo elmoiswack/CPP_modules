@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <queue>
+#include <stack>
 
 class RPN
 {
@@ -15,11 +15,16 @@ public:
 
 	bool IsPlusMinDeviMulti(char c);
 
-	int MultipleOperation(std::queue<int>& container, std::string input, int index);
-	void SingleOperation(std::queue<int>& container, char which);
-	void SingleOperationLast(std::queue<int>& container, char which);
+	int MultipleOperation(std::stack<int>& container, std::string input, int index);
+	void SingleOperation(std::stack<int>& container, char which);
+	void SingleOperationMult(std::stack<int>& container, char which);
 	void CalculateNumb(char *input);
 	void InputParser(std::string input);
+
+	class InvalidBeginStringException : public std::exception
+	{
+		const char *what() const throw();
+	};
 
 	class TooManySpacesStringException : public std::exception
 	{
@@ -37,6 +42,11 @@ public:
 	};
 
 	class InvalidEndStringException : public std::exception
+	{
+		const char *what() const throw();
+	};
+
+	class TooManyCharException : public std::exception
 	{
 		const char *what() const throw();
 	};

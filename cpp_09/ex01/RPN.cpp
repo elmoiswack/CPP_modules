@@ -43,8 +43,20 @@ void RPN::InputParser(std::string input)
 	int numb_count = 0;
 	int operator_count = 0;
 
+	if (input.size() == 1)
+	{
+		if (std::isdigit(input[0]) > 0)
+			return ;
+		else
+			throw (InvalidStrException());
+	}
 	for (index = 0; input[index]; index++)
 	{
+		if (index == 0 || index == 2)
+		{
+			if (std::isdigit(input[index]) == 0)
+				throw (InvalidBeginStringException());
+		}
 		if ((std::isdigit(input[index]) == 0) && (this->IsPlusMinDeviMulti(input[index]) == false) && (input[index] != ' '))
 			throw (InvalidCharInStrException());	
 		if (input[index] == ' ')
@@ -55,7 +67,7 @@ void RPN::InputParser(std::string input)
 		if (input[index] != ' ')
 		{
 			if (input[index + 1] != '\0' && input[index + 1] != ' ')
-				throw (InvalidCharInStrException());
+				throw (TooManyCharException());
 		}
 		if (this->IsPlusMinDeviMulti(input[index]) == false && input[index + 1] == '\0')
 			throw (InvalidEndStringException());
@@ -68,88 +80,81 @@ void RPN::InputParser(std::string input)
 		throw (InvalidStrException());
 }
 
-void RPN::SingleOperation(std::queue<int>& container, char which)
+void RPN::SingleOperation(std::stack<int>& container, char which)
 {
-	int temp = container.front();
+	int temp = container.top();
 	container.pop();
 	if (which == '+')
 	{
-		unsigned int result = temp + container.front();
+		unsigned int result = container.top() + temp;
 		container.pop();
 		container.push(result);
 	}
 	else if (which == '-')
 	{
-		unsigned int result = temp - container.front();
+		unsigned int result = container.top() - temp;
 		container.pop();
 		container.push(result);
 	}
 	else if (which == '/')
 	{
-		unsigned int result = temp / container.front();
+		unsigned int result = container.top() / temp;
 		container.pop();
 		container.push(result);
 	}
 	else if (which == '*')
 	{ 
-		unsigned int result = temp * container.front();
+		unsigned int result = container.top() * temp;
 		container.pop();
 		container.push(result);
 	}
 }
 
-void RPN::SingleOperationLast(std::queue<int>& container, char which)
+void RPN::SingleOperationMult(std::stack<int>& container, char which)
 {
-	int back = container.back();
-	int front = container.front();
+	int back = container.top();
 	container.pop();
+	int front = container.top();
 	container.pop();
 	if (which == '+')
 	{
-		unsigned int result = back + front;
+		unsigned int result = front + back;
 		container.push(result);
 	}
 	else if (which == '-')
 	{
-		unsigned int result = back - front;
+		unsigned int result = front - back;
 		container.push(result);
 	}
 	else if (which == '/')
 	{
-		unsigned int result = back / front;
+		unsigned int result = front / back;
 		container.push(result);
 	}
 	else if (which == '*')
 	{ 
-		unsigned int result = back * front;
+		unsigned int result = front * back;
 		container.push(result);
 	}
 }
 
-int RPN::MultipleOperation(std::queue<int>& container, std::string input, int index)
+int RPN::MultipleOperation(std::stack<int>& container, std::string input, int index)
 {
-	unsigned int result;
-
-	result = container.front();
-	container.pop();
-
 	while (container.size() > 1)
 	{
-		SingleOperation(container, input[index]);
+		SingleOperationMult(container, input[index]);
 		if (((index + 2) < (int)input.size()) && (this->IsPlusMinDeviMulti(input[index + 2]) == true))
 			index += 2;
 		else
 			break ;
 	}
-	container.push(result);
-	SingleOperationLast(container, input[index]);
 	return (index);
 }
 
 void RPN::CalculateNumb(char *input)
 {
 	std::string InputStr(input);
-	std::queue<int> container;
+	std::stack<int> container;
 
 	this->InputParser(InputStr);
 	for (int index = 0; InputStr[index]; index++)
@@ -166,26 +171,40 @@ void RPN::CalculateNumb(char *input)
 				this->SingleOperation(container, InputStr[index]);
 		}
 	}
-	std::cout << container.front() << std::endl;
+	std::cout << container.top() << std::endl;
 	container.pop();
 }
 
 const char* RPN::TooManySpacesStringException::what() const throw()
 {
-	return ("ERROR: check if the input str only has 1 space between the numbers and operators!");
+	return ("check if the input str only has 1 space between the numbers and operators!");
+}
+
+const char* RPN::InvalidBeginStringException::what() const throw()
+{
+	return ("the input str must begin with 2 numbers!");
 }
 
 const char* RPN::InvalidEndStringException::what() const throw()
 {
-	return ("ERROR: the input str must end with an '+ - / *'!");
+	return ("the input str must end with an '+ - / *'!");
 }
 
 const char* RPN::InvalidStrException::what() const throw()
 {
-	return ("ERROR: invalid input!");
+	return ("invalid input!");
 }
 
 const char* RPN::InvalidCharInStrException::what() const throw()
 {
-	return ("ERROR: there is a character that shouldn't be in the input str!");
+	return ("there is a character that shouldn't be in the input str!");
 }
+
+const char* RPN::TooManyCharException::what() const throw()
+{
+	return ("a single char should be followed by a ' ' not another char!");
+}
+
+//+ 1 + 1 2 2 +
+//1 2 * 2 / 2 + 5 * 6 - 1 3 * - 4 5 * * 8 /
+//1 2 3 4 * + -

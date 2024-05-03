@@ -138,37 +138,78 @@ T PmergeMe::MergeSort(T& container)
 	return (merge(left, right));
 }
 
+//check test om te kijken wat ik bedoel
+//maak een pair
+//merge sort beiden de pairs
+//gebruik insertion sort om de pairs samen te voegen
+std::vector<int> PmergeMe::DoTheSort(std::vector<int>& container)
+{
+	std::vector<std::pair<int, int>> pairs;
+
+	for (int i = 0; i + 1 < (int)this->_vecarr.size(); i += 2)
+	{
+        if (this->_vecarr[i] > this->_vecarr[i + 1])
+            std::swap(this->_vecarr[i], this->_vecarr[i + 1]);
+        pairs.push_back(std::make_pair(this->_vecarr[i], this->_vecarr[i + 1]));
+    }
+	//making pairs from the container passed.
+
+	std::vector<int> temp;
+
+	for (int index = 0; index < (int)pairs.size(); index++)
+	{
+		temp.push_back(pairs[index].first);
+	}
+	//storing the first of the pairs in the temp array, all the small numbers, and put them back in the pairs
+	temp = this->MergeSort(temp);
+	std::vector<std::pair<int, int>>::iterator it = pairs.begin();
+	for (int index = 0; index < (int)temp.size(); index++)
+		(*it).first = temp[index];
+	while (temp.size() != 0)
+		temp.pop_back();
+	
+	//the same as above but then for the bigger numbers
+	for (int index = 0; index < (int)pairs.size(); index++)
+	{
+		temp.push_back(pairs[index].second);
+	}
+	temp = this->MergeSort(temp);
+	std::vector<std::pair<int, int>>::iterator it = pairs.begin();
+	for (int index = 0; index < (int)temp.size(); index++)
+		(*it).second = temp[index];
+	while (temp.size() != 0)
+		temp.pop_back();
+
+	//now comes the insertion sort part, where i merge both the pairs into one container
+	
+	return (container);
+}
+
 void PmergeMe::StartSort()
 {
 	time_t start, end;
 	start = clock();
-	this->_vecsorted = this->MergeSort(this->_vecarr);
-	end = clock();
-	this->_vectime = ((double)(end - start)) / CLOCKS_PER_SEC;
-	start = clock();
-	this->_deqsorted = this->MergeSort(this->_deqarr);
-	end = clock();
-	this->_deqtime = ((double)(end - start)) / CLOCKS_PER_SEC;
-	this->PrintAll();
-}
-
-void PmergeMe::PrintAll()
-{
-	std::cout << std::endl;
 	std::cout << "--VECTOR CONTAINER--" << std::endl;
 	std::cout << "Before Vector: ";
 	this->PrintContainer(this->_vecarr);
 	std::cout << "After Vector: ";
+	this->_vecsorted = this->DoTheSort(this->_vecarr);
 	this->PrintContainer(this->_vecsorted);
+	end = clock();
+	this->_vectime = ((double)(end - start)) / CLOCKS_PER_SEC;
 	this->PrintTime(this->_vectime, true);
-	std::cout << std::endl;
-	std::cout << "--DEQUE CONTAINER--" << std::endl;
-	std::cout << "Before deque: ";
-	this->PrintContainer(this->_deqarr);
-	std::cout << "After deque: ";
-	this->PrintContainer(this->_deqsorted);
-	this->PrintTime(this->_deqtime, false);
-	std::cout << std::endl;
+	// start = clock();
+	// std::cout << std::endl;
+	// std::cout << "--DEQUE CONTAINER--" << std::endl;
+	// std::cout << "Before deque: ";
+	// this->PrintContainer(this->_deqarr);
+	// std::cout << "After deque: ";
+	// this->PrintContainer(this->_deqsorted);
+	// this->_deqsorted = this->MergeSort(this->_deqarr);
+	// end = clock();
+	// this->_deqtime = ((double)(end - start)) / CLOCKS_PER_SEC;
+	// this->PrintTime(this->_deqtime, false);
+	// std::cout << std::endl;
 }
 
 template <typename T>

@@ -58,6 +58,11 @@ public:
 		const char* what() const throw();
 	};
 
+	class BadValueInvalidException : public std::exception
+	{
+		const char* what() const throw();
+	};
+
 	class BadInputLineException : public std::exception
 	{
 		const char* what() const throw();

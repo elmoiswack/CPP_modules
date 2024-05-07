@@ -26,9 +26,10 @@ public:
 	void CheckDoubles(std::vector<int> container);
 
 	void StartSort();
-	std::vector<int> DoTheSort(std::vector<int>& container);
+	template <typename T, typename P> T DoTheSort(T& container, P& pairs);
+	template <typename T> T InsertionSort(T& result, T& temp, int strugler);
 	template <typename T> T MergeSort(T& container);
-	template <typename T> T merge(T &left, T &right);
+	template <typename T> T Merge(T &left, T &right);
 	
 	template <typename T> void PrintContainer(T& container);
 	void PrintTime(double time, bool is_vec);

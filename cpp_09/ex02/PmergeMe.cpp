@@ -53,7 +53,7 @@ void PmergeMe::AddNumberToBoth(char *numb)
 	catch(const std::exception& e)
 	{
 		std::cout << "ERROR: invalid number found in string!" << std::endl;
-		std::cerr << e.what() << '\n';
+		std::cerr << "ERROR: " << e.what() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	this->_vecarr.push_back(number);
@@ -92,7 +92,7 @@ void PmergeMe::ParseNumbers(char *argv[])
 }
 
 template <typename T>
-T PmergeMe::merge(T &left, T &right){
+T PmergeMe::Merge(T &left, T &right){
 	T	result;
 	int indexl = 0;
 	int indexr = 0;
@@ -135,81 +135,93 @@ T PmergeMe::MergeSort(T& container)
 	left = this->MergeSort(left);
 	right = this->MergeSort(right);
 
-	return (merge(left, right));
+	return (this->Merge(left, right));
 }
 
-//check test om te kijken wat ik bedoel
-//maak een pair
-//merge sort beiden de pairs
-//gebruik insertion sort om de pairs samen te voegen
-std::vector<int> PmergeMe::DoTheSort(std::vector<int>& container)
+template <typename T> 
+T PmergeMe::InsertionSort(T& result, T& temp, int strugler)
 {
-	std::vector<std::pair<int, int>> pairs;
-
-	for (int i = 0; i + 1 < (int)this->_vecarr.size(); i += 2)
+	for (auto it_temp = temp.begin(); it_temp != temp.end(); it_temp++)
 	{
-        if (this->_vecarr[i] > this->_vecarr[i + 1])
-            std::swap(this->_vecarr[i], this->_vecarr[i + 1]);
-        pairs.push_back(std::make_pair(this->_vecarr[i], this->_vecarr[i + 1]));
+		auto it = std::lower_bound(result.begin(), result.end(), *it_temp);
+		result.insert(it, *it_temp);
+
+	}
+	if (strugler != -1)
+	{
+		auto it = std::lower_bound(result.begin(), result.end(), strugler);
+		result.insert(it, strugler);
+	}
+	return (result);
+}
+
+template <typename T, typename P> 
+T PmergeMe::DoTheSort(T& container, P& pairs)
+{
+	int strugler;
+	if (container.size() % 2 != 0)
+	{
+		auto it = container.end();
+		it--;
+		strugler = *it;
+	}
+	else
+		strugler = -1;
+
+
+	for (int i = 0; i + 1 < (int)container.size(); i += 2)
+	{
+        if (container[i] > container[i + 1])
+            std::swap(container[i], container[i + 1]);
+        pairs.push_back(std::make_pair(container[i], container[i + 1]));
     }
-	//making pairs from the container passed.
 
-	std::vector<int> temp;
-
+	T result;
 	for (int index = 0; index < (int)pairs.size(); index++)
 	{
-		temp.push_back(pairs[index].first);
+		result.push_back(pairs[index].first);
 	}
-	//storing the first of the pairs in the temp array, all the small numbers, and put them back in the pairs
-	temp = this->MergeSort(temp);
-	std::vector<std::pair<int, int>>::iterator it = pairs.begin();
-	for (int index = 0; index < (int)temp.size(); index++)
-		(*it).first = temp[index];
-	while (temp.size() != 0)
-		temp.pop_back();
+	result = this->MergeSort(result);
 	
-	//the same as above but then for the bigger numbers
-	for (int index = 0; index < (int)pairs.size(); index++)
+	T temp;
+	for (auto it_pairs = pairs.begin(); it_pairs != pairs.end(); it_pairs++)
 	{
-		temp.push_back(pairs[index].second);
+		temp.push_back((*it_pairs).second);
 	}
-	temp = this->MergeSort(temp);
-	std::vector<std::pair<int, int>>::iterator it = pairs.begin();
-	for (int index = 0; index < (int)temp.size(); index++)
-		(*it).second = temp[index];
-	while (temp.size() != 0)
-		temp.pop_back();
 
-	//now comes the insertion sort part, where i merge both the pairs into one container
-	
-	return (container);
+	result = this->InsertionSort(result, temp, strugler);
+	return (result);
 }
 
 void PmergeMe::StartSort()
 {
 	time_t start, end;
+
 	start = clock();
 	std::cout << "--VECTOR CONTAINER--" << std::endl;
 	std::cout << "Before Vector: ";
 	this->PrintContainer(this->_vecarr);
 	std::cout << "After Vector: ";
-	this->_vecsorted = this->DoTheSort(this->_vecarr);
+	std::vector<std::pair<int, int>> pairs_vec;
+	this->_vecsorted = this->DoTheSort(this->_vecarr, pairs_vec);
 	this->PrintContainer(this->_vecsorted);
 	end = clock();
 	this->_vectime = ((double)(end - start)) / CLOCKS_PER_SEC;
-	this->PrintTime(this->_vectime, true);
-	// start = clock();
-	// std::cout << std::endl;
-	// std::cout << "--DEQUE CONTAINER--" << std::endl;
-	// std::cout << "Before deque: ";
-	// this->PrintContainer(this->_deqarr);
-	// std::cout << "After deque: ";
-	// this->PrintContainer(this->_deqsorted);
-	// this->_deqsorted = this->MergeSort(this->_deqarr);
-	// end = clock();
-	// this->_deqtime = ((double)(end - start)) / CLOCKS_PER_SEC;
-	// this->PrintTime(this->_deqtime, false);
-	// std::cout << std::endl;
+	this->PrintTime(this->_vectime, true);;
+	
+	std::cout << std::endl;
+	
+	start = clock();
+	std::cout << "--DEQUE CONTAINER--" << std::endl;
+	std::cout << "Before Deque: ";
+	this->PrintContainer(this->_deqarr);
+	std::cout << "After Deque: ";
+	std::deque<std::pair<int, int>> pairs_deq;
+	this->_deqsorted = this->DoTheSort(this->_deqarr, pairs_deq);
+	this->PrintContainer(this->_deqsorted);
+	end = clock();
+	this->_deqtime = ((double)(end - start)) / CLOCKS_PER_SEC;
+	this->PrintTime(this->_deqtime, false);
 }
 
 template <typename T>

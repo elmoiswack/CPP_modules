@@ -98,6 +98,8 @@ void RPN::SingleOperation(std::stack<int>& container, char which)
 	}
 	else if (which == '/')
 	{
+		if (container.top() == 0 || temp == 0)
+			throw (DivZeroException());
 		unsigned int result = container.top() / temp;
 		container.pop();
 		container.push(result);
@@ -128,6 +130,8 @@ void RPN::SingleOperationMult(std::stack<int>& container, char which)
 	}
 	else if (which == '/')
 	{
+		if (front == 0 || back == 0)
+			throw (DivZeroException());
 		unsigned int result = front / back;
 		container.push(result);
 	}
@@ -175,6 +179,11 @@ void RPN::CalculateNumb(char *input)
 	container.pop();
 }
 
+const char* RPN::DivZeroException::what() const throw()
+{
+	return ("division by zero is not possible!");
+}
+
 const char* RPN::TooManySpacesStringException::what() const throw()
 {
 	return ("check if the input str only has 1 space between the numbers and operators!");
@@ -204,7 +213,3 @@ const char* RPN::TooManyCharException::what() const throw()
 {
 	return ("a single char should be followed by a ' ' not another char!");
 }
-
-//+ 1 + 1 2 2 +
-//1 2 * 2 / 2 + 5 * 6 - 1 3 * - 4 5 * * 8 /
-//1 2 3 4 * + -

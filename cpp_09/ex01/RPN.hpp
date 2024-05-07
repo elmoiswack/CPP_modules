@@ -21,6 +21,11 @@ public:
 	void CalculateNumb(char *input);
 	void InputParser(std::string input);
 
+	class DivZeroException : public std::exception
+	{
+		const char *what() const throw();
+	};
+
 	class InvalidBeginStringException : public std::exception
 	{
 		const char *what() const throw();

@@ -82,38 +82,6 @@ void RPN::InputParser(std::string input)
 
 void RPN::SingleOperation(std::stack<int>& container, char which)
 {
-	int temp = container.top();
-	container.pop();
-	if (which == '+')
-	{
-		unsigned int result = container.top() + temp;
-		container.pop();
-		container.push(result);
-	}
-	else if (which == '-')
-	{
-		unsigned int result = container.top() - temp;
-		container.pop();
-		container.push(result);
-	}
-	else if (which == '/')
-	{
-		if (container.top() == 0 || temp == 0)
-			throw (DivZeroException());
-		unsigned int result = container.top() / temp;
-		container.pop();
-		container.push(result);
-	}
-	else if (which == '*')
-	{ 
-		unsigned int result = container.top() * temp;
-		container.pop();
-		container.push(result);
-	}
-}
-
-void RPN::SingleOperationMult(std::stack<int>& container, char which)
-{
 	int back = container.top();
 	container.pop();
 	int front = container.top();
@@ -146,7 +114,7 @@ int RPN::MultipleOperation(std::stack<int>& container, std::string input, int in
 {
 	while (container.size() > 1)
 	{
-		SingleOperationMult(container, input[index]);
+		SingleOperation(container, input[index]);
 		if (((index + 2) < (int)input.size()) && (this->IsPlusMinDeviMulti(input[index + 2]) == true))
 			index += 2;
 		else
